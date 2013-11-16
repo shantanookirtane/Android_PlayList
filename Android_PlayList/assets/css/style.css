@@ -1,0 +1,276 @@
+/***
+   * Thanks for your download :)
+   * 31. january 2013
+   * www.tempees.com  
+   * http://www.facebook.com/tempeescom
+   * http://www.twitter.com/tempeescom
+   * http://www.tempees.com/donate
+   * LICENCE: All of our site is free, and you can use it where you want. For private and commercial purposes.        
+***/ 
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+body {
+  background: #d0d4d8;
+  color: #5b5b5b;
+  font-size: 1em;
+  line-height: 1.4;
+}
+body.open-menu {
+  overflow: hidden;
+}
+h1 { font-size: 30px; color: #275ba2; margin: 10px 0; }
+h2 { font-size: 14px; color: #fff; text-shadow: 0 1px 1px #658515; padding: 0 12px; margin: 20px 0 0 0; }
+h3 { font-size: 12px; color: #8c8c8c; margin: 5px 10px; text-transform: uppercase; }
+a, a:visited, a:hover { text-decoration: none; color: #275ba2; }
+p {
+  
+}
+img { border: 0; }
+a img { border: 0; }
+hr {
+  border: 0;
+  border-top: 1px solid #eaeaea;
+  margin: 40px 0;
+  padding: 0;
+}
+
+ul.menu {
+  padding: 0;
+  margin: 0;
+  list-style-type: none;
+}
+
+.fl { display: block; float: left; }
+.fr { display: block; float: right; }
+
+.clear { clear: both; }
+
+/*Paddings*/
+.pad-2 {
+  padding: 2px;
+}
+.pad-12 {
+  padding: 12px;
+}
+
+/* ---------------------------------------------------- */
+/*                        Footer                        */
+/* ---------------------------------------------------- */
+header {
+  background: #929599;
+  height: 40px;
+  padding: 10px 10px 0 10px;
+  text-align: center;
+  -moz-box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  -webkit-box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  position: relative;
+  z-index: 10;
+}
+
+/* ---------------------------------------------------- */
+/*                         Blocks                       */
+/* ---------------------------------------------------- */
+.white-block {
+  background: #fff;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+  border-radius: 3px;
+  border: 1px solid #bdc1c6;
+  -moz-box-shadow: 0 2px 0 rgba(0,0,0,0.05);
+  -webkit-box-shadow: 0 2px 0 rgba(0,0,0,0.05);
+  box-shadow: 0 2px 0 rgba(0,0,0,0.05);
+  margin-bottom: 15px;
+  box-sizing:border-box;
+  -moz-box-sizing:border-box;
+  -webkit-box-sizing:border-box;
+  width: 100%;
+  min-width: 300px;
+}
+.open-menu .white-block {
+  min-width: 400px;
+}
+
+/* ---------------------------------------------------- */
+/*                        Content                       */
+/* ---------------------------------------------------- */
+#left-menu,
+#content-wrapper {
+  float: left;
+}
+
+#left-menu {
+  width: 75%;
+  background: #353535;
+  display: none;
+  line-height: 1;
+}
+
+#left-menu .search {
+  height: 37px; 
+  padding: 6px 7px 7px 7px;
+}
+#left-menu .search input {
+  width: 100%;
+  height: 37px;
+  box-sizing:border-box;
+  -moz-box-sizing:border-box;
+  -webkit-box-sizing:border-box;
+  border-radius: 4px;
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+  border: 1px solid #0f0f0f;
+  box-shadow: inset 0 0 13px 0 rgba(0,0,0,0.25),0 1px 0 #555658;
+  -moz-box-shadow: inset 0 0 13px 0 rgba(0,0,0,0.25),0 1px 0 #555658;
+  -webkit-box-shadow: inset 0 0 13px 0 rgba(0,0,0,0.25),0 1px 0 #555658;
+  background: url(../img/icons.png) no-repeat -40px 10px #212223;
+  color: #cfcfcf;
+  padding: 5px 5px 5px 40px;
+  text-shadow: 0 1px 0 rgba(0,0,0,0.3);
+}
+#left-menu .search input::-webkit-input-placeholder { color: #cfcfcf; }
+#left-menu .search input:-moz-placeholder { color: #cfcfcf; }
+#left-menu .search input::-moz-placeholder { color: #cfcfcf; }
+#left-menu .search input:-ms-input-placeholder { color: #cfcfcf; }
+#left-menu .search input.placeholder { color: #cfcfcf; }
+
+.wrapmenu {
+  overflow: auto;
+}
+
+#left-menu ul li {
+  clear: both;
+  text-shadow: 0 1px 1px rgba(0,0,0,0.4);
+}
+
+#left-menu ul li a,
+#left-menu a.current-account {
+  display: block;
+  font-size: 15px;
+  color: #d7d7d7;
+  padding: 8px;
+  background: #414141;
+  border-top: 1px solid #565656;
+  border-bottom: 1px solid #2a2a2a;
+  min-height: 30px;
+}
+#left-menu ul.accounts li a,
+#left-menu a.current-account {
+  min-height: 20px;
+}
+
+#left-menu ul li span {
+  margin-left: 5px;
+  padding-top: 8px;
+  display: inline-block;
+}
+
+#left-menu ul.accounts li a img,
+#left-menu a.current-account img {
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+}
+
+#left-menu ul.accounts li a span,
+#left-menu a.current-account span {
+  display: inline-block;
+  padding-top: 0;
+  margin-left: 0;
+}
+
+#content-wrapper {
+  width: 100%;
+  float: left;
+  overflow: auto;
+  position: absolute;
+  background: #d0d4d8;
+}
+.open-menu #content-wrapper {
+  overflow: hidden;
+}
+
+
+/********** STATUS **********/
+/*List*/
+.status-list .head {
+  padding-bottom: 8px;
+  margin: 10px 10px 8px 10px;
+  border-bottom: 1px solid #c6c6c6;
+  line-height: 1.2;
+}
+.status-list .head a {
+  font-size: 14px;
+  font-weight: bold;
+}
+.status-list .head img {
+  width: 32px;
+  height: 32px;
+  margin-right: 10px;
+}
+.status-list .head .date {
+  display: block;
+  font-size: 11px;
+  color: #5c5c5c;
+}
+.status-list .desc {
+  margin: 10px 10px 8px 10px;
+}
+.status-list .comments {
+  background: #efefef;
+  padding: 7px 10px;
+  font-size: 12px;
+  color: #878787;
+  -moz-border-radius: 0 0 2px 2px;
+  -webkit-border-radius: 0 0 2px 2px;
+  border-radius: 0 0 2px 2px;
+}
+.status-list .comments a {
+  color: #878787;
+  display: inline-block;
+  line-height: 14px;
+}
+.status-list .comments a.like {
+  color: #a40161;
+}
+/* ---------------------------------------------------- */
+/*                        Footer                        */
+/* ---------------------------------------------------- */
+footer {
+  font-size: 11px;
+  padding: 20px 0 50px 10px;
+  color: #878787;
+}
+footer a,
+footer a:visited {
+  color: #275ba2;
+  text-decoration: underline;
+}
+footer a:hover {
+  text-decoration: none;
+}
+
+/* ---------------------------------------------------- */
+/*                        Icons                         */
+/* ---------------------------------------------------- */
+.ico { background: url(../img/icons.png) no-repeat; }
+.ico-30 { width: 30px; height: 30px; }
+.ico .count { background-position: -281px -815px; width: 20px; height: 20px; position: absolute; font-size: 11px; text-align: center;
+  color: #d74141; font-weight: bold; padding: 2px 4px 0 0; }
+
+#menu { display: block; width: 44px; height: 30px; text-indent: -9999px; background-position: 0px -709px; }
+
+.i-news { background-position: 0 4px; }
+.i-messages { background-position: 0 -86px; }
+.i-groups { background-position: 0 -177px; }
+.i-photos { background-position: 0 -358px; }
+
+.i-settings { background-position: 0 -544px; }
+.i-logout { background-position: 0 -637px; }
+
+.i-white-add { background-position: 0 -774px; width: 47px; height: 32px; }

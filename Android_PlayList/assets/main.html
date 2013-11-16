@@ -1,0 +1,101 @@
+<html>
+	<head>
+			<meta charset="utf-8">
+	        <title>MobileVPlayList</title>
+	        <meta name="HandheldFriendly" content="True">
+	        <meta name="MobileOptimized" content="320">
+	        <meta name="viewport" content="width=device-width">
+	        
+	        <!-- CSS -->
+	        <link rel="stylesheet" href="css/normalize.css">
+	        <link rel="stylesheet" href="css/jquery.mobile-1.3.2.css">
+	        <link rel="stylesheet" href="css/custom.css">
+	        
+	        <!-- Scripts -->
+	        <script src="js/jquery-1.9.0.min.js"></script>
+	        <script src="js/modernizr-2.6.1.min.js"></script>
+	        <script src="js/jquery.mobile-1.3.2.min.js"></script>
+	</head>  
+	<body>
+		<div data-url="demo-page" data-role="page" id="demo-page" data-theme="d">
+		    <div data-role="header" data-theme="c">
+		        <h1>Videos</h1>
+		        <a href="#left-panel" data-icon="bars" data-iconpos="notext" data-shadow="false" data-iconshadow="false">Menu</a>
+		    </div><!-- /header -->
+		    <div data-role="content">
+		        <div class="article">
+		        	<p>The vidoes will be displayed here in sequence</p>
+		        	<br>
+		        	<p>The vidoes will be displayed here in sequence 1</p>
+		            <!-- <p><img src="../../_assets/img/bike.jpg" alt="Fixed Gear bike"></p>
+		            <h2>Fixed Gear</h2>
+		            <p>A fixed-gear or fixed-wheel bicycle, commonly known as a fixie, is a bicycle that has a drivetrain with no freewheel mechanism. The freewheel was developed early in the history of bicycle design but the fixed-gear bicycle remained the standard track racing design. More recently the 'fixie' has become a popular alternative among mainly urban cyclists, offering the advantages of simplicity compared with the standard multi-geared bicycle.</p>
+		            <p><small>Source: Wikipedia</small></p>
+		            <p><a href="#right-panel" data-role="button" data-theme="b" data-inline="true" data-mini="true" data-shadow="false">Share</a></p> -->
+		        </div><!-- /article -->
+		    </div><!-- /content -->
+		    <div data-role="panel" id="left-panel" data-theme="c">
+		    	<div data-role="listview" >
+			        <ul data-role="listview" data-theme="d">
+			            <li data-icon="delete"><a href="#" data-rel="close">Close</a></li>
+			           <!--  <li data-role="list-divider">PlayList</li> -->
+			            <!-- <li></li> -->
+			        </ul>
+		        </div>
+						
+          			<div data-role="collapsible-set" data-inset="false" data-iconpos="right" data-theme="b" data-content-theme="d">
+	            		<div data-role="collapsible" data-collapsed="false">
+	            		<h3>Stared PlayList</h3>
+	              			<ul data-role="listview">
+	                			<li><a href="#">Road</a></li>
+	                			<li><a href="#">ATB</a></li>
+	                			<li><a href="#">Fixed Gear</a></li>
+	                			<li><a href="#">Cruiser</a></li>
+	              			</ul>
+	            		</div>
+	            		<div data-role="collapsible">
+	            		<h3>PlayList</h3>
+	              			<ul data-role="listview">
+	                			<li><a href="#">Road</a></li>
+	                			<li><a href="#">ATB</a></li>
+	                			<li><a href="#">Fixed Gear</a></li>
+	                			<li><a href="#">Cruiser</a></li>
+	              			</ul>
+	            		</div>
+            		</div>
+            	
+		      
+<!--           			<div data-role="collapsible-set" data-inset="false" data-iconpos="right" data-theme="b" data-content-theme="d">
+	            		<div data-role="collapsible">
+	            		<h3>PlayList</h3>
+	              			<ul data-role="listview">
+	                			<li><a href="#">Road</a></li>
+	                			<li><a href="#">ATB</a></li>
+	                			<li><a href="#">Fixed Gear</a></li>
+	                			<li><a href="#">Cruiser</a></li>
+	              			</ul>
+	            		</div>
+            		</div> -->
+            	
+<!-- 		        <div data-role="listview" data-inset="false" data-iconpos="right" data-theme="d" data-content-theme="d" class="playListCat">
+		        	<ul data-role="listview">
+		                <li><a href="#">Road</a></li>
+		                <li><a href="#">ATB</a></li>
+		                <li><a href="#">Fixed Gear</a></li>
+		                <li><a href="#">Cruiser</a></li>
+              		</ul>
+		        </div> --> <!--playListCat  --> <!-- data-role="collapsible" -->
+		    </div><!-- /panel -->
+		    <!-- <div data-role="panel" id="right-panel" data-display="overlay" data-position="right" data-theme="c">
+		        <ul data-role="listview" data-theme="d" data-icon="false">
+		            <li data-icon="delete"><a href="#" data-rel="close">Close</a></li>
+		            <li data-role="list-divider">Share this page</li>
+		            <li><a href="#">Twitter</a></li>
+		            <li><a href="#">Facebook</a></li>
+		            <li><a href="#">Google +</a></li>
+		            <li><a href="#">Mail</a></li>
+		        </ul>
+		    </div> --><!-- /panel -->
+		</div>
+	</body>
+</html>
