@@ -57,7 +57,7 @@ Narrow the scope of the selectors to prevent other panels being affected by the 
 This class will be added to the content wrapper, while the page itself gets the same background
 as the panel before opening the panel. */
 #demo-page .ui-body-d {
-    background-image: url(../../_assets/img/bg-pattern.png);
+    background-image: url(../plugin/images/bg-pattern.png);
     background-repeat: repeat-x;
     background-position: left bottom;
 }
