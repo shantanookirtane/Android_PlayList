@@ -17,7 +17,7 @@
 
 
 $(document).on('pageinit', '[data-role="page"]', function(){
-	alert('A page with an id of "aboutPage" was just pageinit by jQuery Mobile!');
+	// alert('A page with an id of "aboutPage" was just pageinit by jQuery Mobile!');
 	localStorage.setItem('staredPlayList','Dora(5)');
 	populatePlayList();
 	populateStaredPlayList();
