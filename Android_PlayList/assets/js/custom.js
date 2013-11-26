@@ -21,11 +21,22 @@ $(document).on('pageinit', '[data-role="page"]', function(){
 	localStorage.setItem('staredPlayList','Dora(5)');
 	populatePlayList();
 	populateStaredPlayList();
-	
+//	$('#contentVideosId').jScrollPane();
 	$('ul#playListUl').on('click', 'li', function(evt){
 		alert("li item clicked");
 	});
-	
+});
+
+$(document).on('pagebeforeshow', '[data-role="page"]', function(){
+//	$('#video-list').jScrollPane();
+});
+
+
+$(document).ready(function () {
+	$('div.video-wrapper').jScrollPane({
+		verticalDragMinHeight: 20,
+		verticalDragMaxHeight: 20
+	});
 });
 
 
@@ -57,4 +68,60 @@ function populateStaredPlayList() {
 
 
 // $(document).delegate("#demo-page", "pageinit", function() {
+
+
+
+/*var data = {
+        menu: [{
+            id: '0',
+            name: 'name1',
+            alsoknownas: ['alias1',
+                'alias3']
+        }, {
+            id: '1',
+            name: 'name2',
+            alsoknownas: ['alias3', 'alias1']
+        }, {
+            id: '2',
+            name: 'name3',
+            alsoknownas: ['alias1', 'alias2']
+        }]
+    };
+
+
+         $(document).ready(function () {
+             buildJSON(data.menu);
+         });
+
+
+         function buildJSON(data) {
+
+             var dataList = data;
+           //   alert("I am here");
+             var myMap = {};
+             var html = "<ul id='ulList'></ul>";
+             $('div#content').append('<BR><BR><div id="dataDiv"></div>').append(html);
+             $.each(dataList, function (i, dataMap) {
+                 var aiases = dataMap.alsoknownas;
+                 $.each(aiases, function (i, alias) {
+
+                     if (myMap[alias]) {
+                         var value = myMap[alias] + 1;
+                         myMap[alias] = value;
+                     } else {
+                         myMap[alias] = 1;
+                     }
+                 });
+             });
+         //alert("my map" + JSON.stringify(myMap));
+             $.each(myMap, function (key, value) {
+                 //alert("key "+key+" value "+value);
+                 $('div#content').find('ul#ulList')
+         .append('<li class="liElement"><a href="alias1.html">' + key + '(' + value + ')</a></li>');
+             });
+             
+            //  alert("div : "+ $('div#dataDiv').html);
+         }*/
+
+
 
