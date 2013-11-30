@@ -79,3 +79,12 @@ as the panel before opening the panel. */
 	width: 100%;
 	height: 100%;
 } 
+
+
+a.starSelected {
+	background:#FFFF00 !important;
+}
+
+a.plusAdded {
+	background:#181256 !important;
+} 

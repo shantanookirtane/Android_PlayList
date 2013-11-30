@@ -49,6 +49,21 @@ $(document).on('pageinit', '[data-role="page"]', function(){
 		// refresh the list
 	});
 	
+	$('ul#video-list').on('click', 'a.starButton', function(evt){
+		$this = $(this);
+		$this.toggleClass('starSelected');
+		// check if the class there then remove that from local storage
+		// else add the class and add that entry in localstorage
+		// change the tooltiptext
+	});
+	
+	$('ul#video-list').on('click', 'a.addButton', function(evt){
+		$this = $(this);
+		$this.toggleClass('plusAdded');
+		// check if the class there then remove that from local storage
+		// else add the class and add that entry in localstorage
+		// change the tooltiptext
+	});
 	
 });
 
