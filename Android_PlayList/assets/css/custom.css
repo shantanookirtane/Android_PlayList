@@ -88,3 +88,9 @@ a.starSelected {
 a.plusAdded {
 	background:#181256 !important;
 } 
+
+/* Thanks to stackoverflow */
+ ul li > * {
+      display: inline-block;
+      vertical-align: middle;
+ }
