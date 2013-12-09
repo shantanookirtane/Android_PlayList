@@ -14,21 +14,12 @@ public class MainActivity extends Activity {
         // setContentView(R.layout.activity_main);
         WebView webView = new WebView(this);
         WebSettings settings = webView.getSettings();
-        
         // TO enable JS
         settings.setJavaScriptEnabled(true);
         // To enable Localstorage
         settings.setDomStorageEnabled(true);
-        
         webView.loadUrl("file:///android_asset/main.html");
         setContentView(webView);
-        /*By default Javascript is turned off,
-         * it can be enabled by this line.
-         */
-     //   webView.getSettings().setJavaScriptEnabled(true);
-      //  webView.setWebViewClient(new WebViewClient());
-
-       // webView.loadUrl("file:///android_asset/test.html");
     }
 
 

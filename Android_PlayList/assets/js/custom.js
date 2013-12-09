@@ -16,13 +16,15 @@ var data = {
     };
 
 
-$(document).on('pageinit', '[data-role="page"]', function(){
+$(document).on('pageinit', '[data-role="page"]', function() {
 	// alert('A page with an id of "aboutPage" was just pageinit by jQuery Mobile!');
 	localStorage.setObj('favouritePlayList',[]);
 	localStorage.setObj('myPlayList',[]);
 	populatePlayList();
 	populatefavouritePlayList();
 	populateMyPlayList();
+	//var data = videosJsonData;
+	//console.log("sfdssdfs ::: "+ JSON.stringify(data));
 //	$('#contentVideosId').jScrollPane();
 	
 	// Video PlayList 
@@ -65,6 +67,26 @@ $(document).on('pageinit', '[data-role="page"]', function(){
 		// change the tooltiptext
 	});
 	
+	/*$.getJSON( "js/videos.js", function( json ) {
+		console.log( "JSON Data: " + JSON.stringify(json));
+		$("ul#video-list").html("");
+		$("ul#video-list").html(json);
+		
+	});*/
+	
+   /* $.ajax({
+        url: "js/videos.js",
+        dataType: "jsonp",
+        async: true,
+        success: function (result) {
+            ajax.parseJSONP(result);
+        },
+        error: function (request,error) {
+            alert('Network error has occurred please try again!');
+        }
+    });*/
+	
+	
 });
 
 $(document).on('pagebeforeshow', '[data-role="page"]', function(){
@@ -75,10 +97,10 @@ $(document).on('pagebeforeshow', '[data-role="page"]', function(){
 $(document).ready(function () {
 	// resize videos
 	// resizeVideos();
-	$('div.video-wrapper').jScrollPane({
+/*	$('div.video-wrapper').jScrollPane({
 		verticalDragMinHeight: 20,
 		verticalDragMaxHeight: 40
-	});
+	});*/
 	
 	//$("ul#video-list").listview("refresh");
 });
@@ -87,7 +109,7 @@ $(document).ready(function () {
 function populatePlayList() {
 	// Ajax call to get the playList
 	// Call another function to do the business logic on the result
-	var videoListMap = buildVideoListDS(data);
+	var videoListMap = buildVideoListDS(videosJsonData);
 	console.log(" videoListMap :: "+videoListMap);
 	// This function will return list of li or a single li which will say no data found
 	//var playListDiv = $('div#playListDiv');
@@ -97,7 +119,7 @@ function populatePlayList() {
 	var $playListUl = $('ul#playListUl');
 	$.each(localStorageVideoListMap, function (key, value) {
 	    //alert("key "+key+" value "+value);
-		$playListUl.append('<li class="liElement"><a href="alias1.html">' + key + '(' + value + ')</a></li>');
+		$playListUl.append('<li class="liElement"><a href="alias1.html">' + key + '(' + value.occurance + ')</a></li>');
 	    // .append('<li class="liElement"><a href="alias1.html">' + key + '(' + value + ')</a></li>');
 	});
 	
@@ -155,24 +177,34 @@ function populateMyPlayList() {
 
 
 // Will get called after Ajax call
-function buildVideoListDS(data) {
+function buildVideoListDS(videosJsonData) {
 
-    var dataList = data.menu;
+   
   //   alert("I am here");
     var videoListMap = {};
+    var videoDetails = {};
+    var videoIdList = [];
     //var html = "<ul id='ulList'></ul>";
     //$('div#content').append('<BR><BR><div id="dataDiv"></div>').append(html);
-    $.each(dataList, function (i, dataMap) {
-        var aliases = dataMap.alsoknownas;
-        $.each(aliases, function (i, alias) {
-            if (videoListMap[alias]) {
-                var value = videoListMap[alias] + 1;
-                videoListMap[alias] = value;
+    $.each(videosJsonData, function (i, videoMap) {
+        var categories = videoMap.aliases;
+        $.each(categories, function (i, category) {
+            if (videoListMap[category]) {
+                var value = videoListMap[category]["occurance"] + 1;
+                videoDetails["occurance"] = value;
+                videoIdList.push(videoMap["video_id"]);
+                videoDetails["videoIdList"] = videoIdList;
+                videoListMap[category] = videoDetails;
             } else {
-            	videoListMap[alias] = 1;
+            	 // videoListMap[category] = 1;
+            	 videoDetails["occurance"] = 1;
+            	 videoIdList.push(videoMap["video_id"]);
+                 videoDetails["videoIdList"] = videoIdList;
+                 videoListMap[category] = videoDetails;
             }
         });
     });
+    console.log(" new data structure :: " + JSON.stringify(videoListMap));
     return videoListMap;
 //alert("my map" + JSON.stringify(myMap));
    /* $.each(myMap, function (key, value) {
