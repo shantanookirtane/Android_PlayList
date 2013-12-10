@@ -20,15 +20,19 @@ $(document).on('pageinit', '[data-role="page"]', function() {
 	// alert('A page with an id of "aboutPage" was just pageinit by jQuery Mobile!');
 	localStorage.setObj('favouritePlayList',[]);
 	localStorage.setObj('myPlayList',[]);
-	populatePlayList();
-	populatefavouritePlayList();
-	populateMyPlayList();
+	populatePlayListMenu();
+	populatefavouritePlayListMenu();
+	populateMyPlayListMenu();
 	//var data = videosJsonData;
 	//console.log("sfdssdfs ::: "+ JSON.stringify(data));
 //	$('#contentVideosId').jScrollPane();
 	
 	// Video PlayList 
-	$('ul#playListUl').on('click', 'li', function(evt){
+	$('ul#playListUl').on('click', 'li', function(evt) {
+		var current = evt.currentTarget;
+		$this = $(this);
+		console.log(" current target :: "+$(current));
+		console.log(" this :: "+$this);
 		// alert("li item clicked");
 		// get the videos from the list
 		// populate them in Li
@@ -106,35 +110,30 @@ $(document).ready(function () {
 });
 
 
-function populatePlayList() {
+function populatePlayListMenu() {
 	// Ajax call to get the playList
+	// No need to do ajax as the json is coming from local json file
+	var videoListMap;
 	// Call another function to do the business logic on the result
-	var videoListMap = buildVideoListDS(videosJsonData);
-	console.log(" videoListMap :: "+videoListMap);
-	// This function will return list of li or a single li which will say no data found
-	//var playListDiv = $('div#playListDiv');
-	localStorage.setObj('videoListService', videoListMap); // for objects to store in local storage you have to stringify
+	if (!localStorage.getObj('videoListService')) {
+		videoListMap = buildVideoListDS(videosJsonData);
+	}
+	console.log(" videoListMap for LHS :: "+videoListMap);
+	// set the obj in localstorage
+	localStorage.setObj('videoListService', videoListMap); 
+	// for objects to store in local storage you have to stringify
 	// refer http://stackoverflow.com/questions/2010892/storing-objects-in-html5-localstorage
-	var localStorageVideoListMap = localStorage.getObj('videoListService'); // and while getting parse it
+	var videoListMapFrmLS = localStorage.getObj('videoListService');
 	var $playListUl = $('ul#playListUl');
-	$.each(localStorageVideoListMap, function (key, value) {
-	    //alert("key "+key+" value "+value);
-		$playListUl.append('<li class="liElement"><a href="alias1.html">' + key + '(' + value.occurance + ')</a></li>');
-	    // .append('<li class="liElement"><a href="alias1.html">' + key + '(' + value + ')</a></li>');
+	$.each(videoListMapFrmLS, function (key, value) {
+		$playListUl.append('<li class="liElement" data-vmapp-val="'+key+'"><a href="alias1.html">' + key + '(' + value.occurance + ')</a></li>'); 
 	});
-	
-	
-	/*
-	$playListUl.append('<li><a href="#">Dora(5)</a></li>'+
-			'<li><a href="#">Micky Mouse(2)</a></li>'+
-			'<li><a href="#">Barbeey(7)</a></li>'+
-			'<li><a href="#">Poppey(3)</a></li>');*/
 	// Always call this to set the design to added elements
 	$playListUl.listview("refresh");
 	
 }
 
-function populatefavouritePlayList() {
+function populatefavouritePlayListMenu() {
 	// load the playlist from localstorage
 	var favouritePlayList = localStorage.getObj('favouritePlayList');
 	var $favouritePlayListUl = $('ul#favouritePlayListUl');
@@ -155,7 +154,7 @@ function populatefavouritePlayList() {
 }
 
 
-function populateMyPlayList() {
+function populateMyPlayListMenu() {
 	// load the playlist from localstorage
 	var myPlayList = localStorage.getObj('myPlayList');
 	var $myPlayListUl = $('ul#myPlayListUl');
@@ -186,25 +185,32 @@ function buildVideoListDS(videosJsonData) {
     var videoIdList = [];
     //var html = "<ul id='ulList'></ul>";
     //$('div#content').append('<BR><BR><div id="dataDiv"></div>').append(html);
+    
+    var videoIdBasedMap = {};
+    
+    // create 2 DS one for LHS menu and one for showing actual contents
     $.each(videosJsonData, function (i, videoMap) {
         var categories = videoMap.aliases;
+        // create this DS for main content
+        videoIdBasedMap[$.trim(videoMap["video_id"])] = videoMap;
         $.each(categories, function (i, category) {
             if (videoListMap[category]) {
                 var value = videoListMap[category]["occurance"] + 1;
                 videoDetails["occurance"] = value;
-                videoIdList.push(videoMap["video_id"]);
+                videoIdList.push($.trim(videoMap["video_id"]));
                 videoDetails["videoIdList"] = videoIdList;
                 videoListMap[category] = videoDetails;
             } else {
             	 // videoListMap[category] = 1;
             	 videoDetails["occurance"] = 1;
-            	 videoIdList.push(videoMap["video_id"]);
+            	 videoIdList.push($.trim(videoMap["video_id"]));
                  videoDetails["videoIdList"] = videoIdList;
                  videoListMap[category] = videoDetails;
             }
         });
     });
-    console.log(" new data structure :: " + JSON.stringify(videoListMap));
+    // console.log(" new data structure :: " + JSON.stringify(videoListMap));
+    console.log(" new DS For Main Content :: " + JSON.stringify(videoIdBasedMap));
     return videoListMap;
 //alert("my map" + JSON.stringify(myMap));
    /* $.each(myMap, function (key, value) {
@@ -218,10 +224,14 @@ function buildVideoListDS(videosJsonData) {
 
 
 Storage.prototype.setObj = function(key, obj) {
-    return this.setItem(key, JSON.stringify(obj))
+    return this.setItem(key, JSON.stringify(obj));
 }
 Storage.prototype.getObj = function(key) {
-    return JSON.parse(this.getItem(key))
+	if (this.getItem(key) != "undefined") {
+		return JSON.parse(this.getItem(key));
+	} else {
+		return null;
+	}
 }
 
 
