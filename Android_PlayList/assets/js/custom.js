@@ -116,16 +116,17 @@ function populatePlayListMenu() {
 	var videoListMap;
 	// Call another function to do the business logic on the result
 	if (!localStorage.getObj('videoListService')) {
+		console.log(" Not found in local storage :: calling build JSON function :: ");
 		videoListMap = buildVideoListDS(videosJsonData);
-	}
-	console.log(" videoListMap for LHS :: "+videoListMap);
-	// set the obj in localstorage
-	localStorage.setObj('videoListService', videoListMap); 
+		localStorage.setObj('videoListService', videoListMap);
+		console.log(" Setting object in localstorage :: "+videoListMap);
+	} 
+	// get it from localstorage
+	videoListMap = localStorage.getObj('videoListService');
 	// for objects to store in local storage you have to stringify
 	// refer http://stackoverflow.com/questions/2010892/storing-objects-in-html5-localstorage
-	var videoListMapFrmLS = localStorage.getObj('videoListService');
 	var $playListUl = $('ul#playListUl');
-	$.each(videoListMapFrmLS, function (key, value) {
+	$.each(videoListMap, function (key, value) {
 		$playListUl.append('<li class="liElement" data-vmapp-val="'+key+'"><a href="alias1.html">' + key + '(' + value.occurance + ')</a></li>'); 
 	});
 	// Always call this to set the design to added elements
@@ -181,13 +182,11 @@ function buildVideoListDS(videosJsonData) {
    
   //   alert("I am here");
     var videoListMap = {};
-    var videoDetails = {};
-    var videoIdList = [];
+    //var videoDetails = {};
+   //  var videoIdList = [];
     //var html = "<ul id='ulList'></ul>";
     //$('div#content').append('<BR><BR><div id="dataDiv"></div>').append(html);
-    
     var videoIdBasedMap = {};
-    
     // create 2 DS one for LHS menu and one for showing actual contents
     $.each(videosJsonData, function (i, videoMap) {
         var categories = videoMap.aliases;
@@ -196,11 +195,15 @@ function buildVideoListDS(videosJsonData) {
         $.each(categories, function (i, category) {
             if (videoListMap[category]) {
                 var value = videoListMap[category]["occurance"] + 1;
-                videoDetails["occurance"] = value;
+                // videoDetails["occurance"] = value;
+                videoListMap[category]["occurance"] = value;
+                var videoIdList = videoListMap[category]["videoIdList"];
                 videoIdList.push($.trim(videoMap["video_id"]));
-                videoDetails["videoIdList"] = videoIdList;
-                videoListMap[category] = videoDetails;
+                videoListMap[category]["videoIdList"] = videoIdList;
+                // videoListMap[category] = videoDetails;
             } else {
+            	 var videoDetails = {};
+            	 var videoIdList = [];
             	 // videoListMap[category] = 1;
             	 videoDetails["occurance"] = 1;
             	 videoIdList.push($.trim(videoMap["video_id"]));
@@ -209,7 +212,7 @@ function buildVideoListDS(videosJsonData) {
             }
         });
     });
-    // console.log(" new data structure :: " + JSON.stringify(videoListMap));
+    console.log(" new data structure :: " + JSON.stringify(videoListMap));
     console.log(" new DS For Main Content :: " + JSON.stringify(videoIdBasedMap));
     return videoListMap;
 //alert("my map" + JSON.stringify(myMap));
