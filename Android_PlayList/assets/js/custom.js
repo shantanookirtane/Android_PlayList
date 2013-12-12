@@ -29,10 +29,57 @@ $(document).on('pageinit', '[data-role="page"]', function() {
 	
 	// Video PlayList 
 	$('ul#playListUl').on('click', 'li', function(evt) {
-		var current = evt.currentTarget;
-		$this = $(this);
-		console.log(" current target :: "+$(current));
-		console.log(" this :: "+$this);
+		//var current = evt.currentTarget;
+		var $li = $(this);
+		//console.log(" current target :: "+$(current));
+		console.log(" this :: "+$li.attr("data-vmapp-val"));
+		// clear the contents
+		var $videoContent = $("ul#video-list");
+		$videoContent.html("");
+		
+		/*var $videoLi = $("<li>");
+		var videoImg = $("<img>");
+		var $infoDiv = $("<div data-role='controlgroup' data-type='vertical'>");
+		var $buttonDiv = $("<div data-role='controlgroup' data-type='horizontal'>");
+		var $buttonAnchor = $("<a href='#' data-role='button' data-icon='plus' data-iconpos='notext' data-inline='true'>");*/
+		var videoListMap = localStorage.getObj('videoListService');
+		var videoIdListVal = videoListMap[$.trim($li.attr("data-vmapp-val"))].videoIdList;
+		/*
+		 * <li>
+		 * 		<img>
+		 * 		<div1><info>
+		 * 		<div2><a>
+		 * </li>
+		 * "avg_rating": " 3.21",
+          "likes": " 480",
+          "dislikes": " 389",
+          "total_views": "348531",
+          "title": "Go Diego Go! English Episode for Children - 2013 (Dora the Explorer Friend)",
+          "thumbnail": "http://i.ytimg.com/vi/9-4ki20O6DI/default.jpg"
+		 * */
+		var videoIdBasedMap = localStorage.getObj("videoIdBasedMap");
+		_.each(videoIdListVal, function(element, index, list) {
+			var $videoLi = $("<li>");
+			var $videoImg = $("<img>");
+			var $infoDiv = $("<div data-role='controlgroup' data-type='vertical'>");
+			var $buttonDiv = $("<div data-role='controlgroup' data-type='horizontal'>");
+			var $buttonAnchor = $("<a href='#' data-role='button' data-icon='plus' data-iconpos='notext' data-inline='true'>");
+			var $buttonAnchor1 = $("<a href='#' data-role='button' data-icon='plus' data-iconpos='notext' data-inline='true'>");
+			var videoMap = videoIdBasedMap[element];
+			$buttonDiv.append($buttonAnchor.text("Add to my playlist"));
+			$buttonDiv.append($buttonAnchor1.text("Add to Favourite"));
+			var infoStr = "Title: "+trim(videoMap.title)+"<BR>"+"Total Views: "+trim(videoMap.total_views)+"<BR>"+"Likes: "+trim(videoMap.likes)+" DisLikes: "+trim(videoMap.dislikes);
+			infoStr += "<BR>"+"Avg Rating: "+trim(videoMap.avg_rating);
+			$infoDiv.html(infoStr);
+			$videoImg.attr("src", trim(videoMap.thumbnail));
+			$videoLi.append($videoImg).append($infoDiv).append($buttonDiv);
+			$videoContent.append($videoLi);
+			infoStr = "";
+			console.log("video LI :: "+$videoLi.html());
+		});
+		console.log("video UL :: "+$videoContent.html());
+		$videoContent.listview("refresh");
+		$("#demo-page").trigger("create");
 		// alert("li item clicked");
 		// get the videos from the list
 		// populate them in Li
@@ -127,7 +174,7 @@ function populatePlayListMenu() {
 	// refer http://stackoverflow.com/questions/2010892/storing-objects-in-html5-localstorage
 	var $playListUl = $('ul#playListUl');
 	$.each(videoListMap, function (key, value) {
-		$playListUl.append('<li class="liElement" data-vmapp-val="'+key+'"><a href="alias1.html">' + key + '(' + value.occurance + ')</a></li>'); 
+		$playListUl.append('<li class="liElement" data-vmapp-val="'+key+'"><a href="#">' + key + '(' + value.occurance + ')</a></li>'); 
 	});
 	// Always call this to set the design to added elements
 	$playListUl.listview("refresh");
@@ -212,6 +259,9 @@ function buildVideoListDS(videosJsonData) {
             }
         });
     });
+    // set the video ID based Map
+    localStorage.setObj("videoIdBasedMap", videoIdBasedMap);
+    
     console.log(" new data structure :: " + JSON.stringify(videoListMap));
     console.log(" new DS For Main Content :: " + JSON.stringify(videoIdBasedMap));
     return videoListMap;
@@ -235,6 +285,10 @@ Storage.prototype.getObj = function(key) {
 	} else {
 		return null;
 	}
+}
+
+function trim(str) {
+	return $.trim(str);
 }
 
 
