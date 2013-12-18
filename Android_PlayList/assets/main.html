@@ -25,7 +25,7 @@
 	</head>  
 	<body>
 		<div data-url="demo-page" data-role="page" id="demo-page" data-theme="d">
-		    <div data-role="header" data-position="fixed" data-theme="c">
+		    <div data-role="header" id="headerDiv" data-position="fixed" data-theme="c">
 		        <h1>Videos</h1>
 		        <a href="#left-panel" data-icon="bars" data-iconpos="notext" data-shadow="false" data-iconshadow="false">Menu</a>
 		    </div><!-- /header -->
@@ -34,7 +34,7 @@
 		    	<!-- Below div required for tinyscrollbar to work -->
 		        <div class="video-wrapper">
 		            <ul data-role="listview"  id="video-list" data-theme="d">
-			            <li><iframe title="YouTube video player" src="http://www.youtube.com/embed/4Vq4s8n8vxw" ></iframe>
+			            <!-- <li><iframe title="YouTube video player" src="http://www.youtube.com/embed/4Vq4s8n8vxw" ></iframe>
 			            <div data-role="controlgroup" data-type="horizontal">
 			            <a href="#" data-role="button" data-icon="plus" data-iconpos="notext" data-inline="true" class="addButton">Add to my playlist</a>
 			            <a href="#" data-role="button" data-icon="star" data-iconpos="notext" data-inline="true" class="starButton">Add to Favourite</a></div>
@@ -66,7 +66,7 @@
 			        	<li><iframe title="YouTube video player" src="http://www.youtube.com/embed/lzQgAR_J1PI?wmode=transparent" seamless></iframe></li>
 			        	<li><iframe title="YouTube video player" src="http://www.youtube.com/embed/lzQgAR_J1PI?wmode=transparent" seamless></iframe></li>
 			        	<li><iframe title="YouTube video player" src="http://www.youtube.com/embed/lzQgAR_J1PI?wmode=transparent" seamless></iframe></li>
-			        	<li><iframe title="YouTube video player" src="http://www.youtube.com/embed/lzQgAR_J1PI?wmode=transparent" seamless></iframe></li>     
+			        	<li><iframe title="YouTube video player" src="http://www.youtube.com/embed/lzQgAR_J1PI?wmode=transparent" seamless></iframe></li> -->     
 		            </ul>
 		        </div><!-- /video=wrapper -->
 		    </div><!-- /content -->
@@ -78,7 +78,7 @@
 			            <!-- <li></li> -->
 			        </ul>
 		        </div>		
-          		<div data-role="collapsible-set" data-inset="false" data-iconpos="right" data-theme="b" data-content-theme="d">
+          		<div data-role="collapsible-set" id="lhsMenuDiv" data-inset="false" data-iconpos="right" data-theme="b" data-content-theme="d">
             		<div data-role="collapsible" id="myPlayListDiv">
             			<h3>My PlayList</h3>
               			<ul data-role="listview" id="myPlayListUl">
