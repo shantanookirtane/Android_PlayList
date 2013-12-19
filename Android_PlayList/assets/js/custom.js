@@ -82,7 +82,7 @@ $(document).on('pageinit', '[data-role="page"]', function() {
 	// Video PlayList 
 	$('ul#playListUl').on('click', 'li', function(evt) {
 		//var current = evt.currentTarget;
-		var $li = $(this);
+		var $li = $(this);	
 		//console.log(" current target :: "+$(current));
 		console.log(" this :: "+$li.attr("data-vmapp-val"));
 		// clear the contents
@@ -92,7 +92,23 @@ $(document).on('pageinit', '[data-role="page"]', function() {
 		// first check if the li element list in localstorage, if yes pull it from there.
 		var liElementList = localStorage.getObj($.trim($li.attr("data-vmapp-val")));
 		if (liElementList) {
+			var myPlayList = localStorage.getObj('myPlayList');
+			var favouritePlayList = localStorage.getObj('favouritePlayList');
 			$videoContent.html(liElementList);
+			var liElementList = $videoContent.find('li');
+			_.each(liElementList, function(element, index, list) {
+				var $liElement = $(element);
+				var videoId = $liElement.attr('data-video-id');
+				// if the element is in favourite playlist then select it
+				if (_.indexOf(favouritePlayList, videoId) != -1) {
+					$liElement.find('a.starButton').addClass('starSelected');
+					//.remove();
+				}
+				if (_.indexOf(myPlayList, videoId) != -1) {
+					$liElement.find('a.addButton').addClass('plusAdded');
+					//.remove();
+				}
+			});
 		} else {
 			var videoListMap = localStorage.getObj('videoListService');
 			var videoIdListVal = videoListMap[$.trim($li.attr("data-vmapp-val"))].videoIdList;
@@ -111,27 +127,7 @@ $(document).on('pageinit', '[data-role="page"]', function() {
 			 * */
 			var videoIdBasedMap = localStorage.getObj("videoIdBasedMap");
 			
-			$videoContent = populateVideoContents(videoIdListVal, videoIdBasedMap, $videoContent);
-			
-/*			_.each(videoIdListVal, function(element, index, list) {	
-				var videoMap = videoIdBasedMap[element];
-				var $videoLi = $("<li data-videoId="+videoMap.video_id+">");
-				var $videoImg = $("<img>");
-				var $infoDiv = $("<div data-role='controlgroup' data-type='vertical'>");
-				var $buttonDiv = $("<div data-role='controlgroup' data-type='horizontal'>");
-				var $buttonAnchor = $("<a href='#' data-role='button' data-icon='plus' data-iconpos='notext' data-inline='true' class='addButton'>");
-				var $buttonAnchor1 = $("<a href='#' data-role='button' data-icon='star' data-iconpos='notext' data-inline='true' class='starButton'>");
-				$buttonDiv.append($buttonAnchor.text("Add to my playlist"));
-				$buttonDiv.append($buttonAnchor1.text("Add to Favourite"));
-				var infoStr = "Title: "+trim(videoMap.title)+"<BR>"+"Total Views: "+trim(videoMap.total_views)+"<BR>"+"Likes: "+trim(videoMap.likes)+" DisLikes: "+trim(videoMap.dislikes);
-				infoStr += "<BR>"+"Avg Rating: "+trim(videoMap.avg_rating);
-				$infoDiv.html(infoStr);
-				$videoImg.attr("src", trim(videoMap.thumbnail));
-				$videoLi.append($videoImg).append($infoDiv).append($buttonDiv);
-				$videoContent.append($videoLi);
-				infoStr = "";
-				console.log("video LI :: "+$videoLi.html());
-			});*/
+			$videoContent = populateVideoContents(videoIdListVal, videoIdBasedMap, $videoContent);			
 			// store the li list in localstorage
 			localStorage.setObj($.trim($li.attr("data-vmapp-val")), $videoContent.html());
 		}
@@ -153,7 +149,7 @@ $(document).on('pageinit', '[data-role="page"]', function() {
 		var $videoContainer = $("ul#video-list");
 		var videoIdBasedMap = localStorage.getObj("videoIdBasedMap");
 		$videoContainer.html("");
-		$videoContainer = populateVideoContents(myPlayList, videoIdBasedMap, $videoContainer);
+		$videoContainer = populateVideoContents(myPlayList, videoIdBasedMap, $videoContainer, "myPlayList");
 		$videoContainer.listview("refresh");
 		// refresh the control group div
 		$("#demo-page").trigger("create");
@@ -170,7 +166,7 @@ $(document).on('pageinit', '[data-role="page"]', function() {
 		var $videoContainer = $("ul#video-list");
 		var videoIdBasedMap = localStorage.getObj("videoIdBasedMap");
 		$videoContainer.html("");
-		$videoContainer = populateVideoContents(favouritePlayList, videoIdBasedMap, $videoContainer);
+		$videoContainer = populateVideoContents(favouritePlayList, videoIdBasedMap, $videoContainer,"favouritePlayList");
 		$videoContainer.listview("refresh");
 		// refresh the control group div
 		$("#demo-page").trigger("create");
@@ -283,7 +279,7 @@ $(document).ready(function () {
 });
 
 
-function populateVideoContents(videoIdList, videoIdInfoMap, videoContainer) {
+function populateVideoContents(videoIdList, videoIdInfoMap, videoContainer, playListName) {
 	var $videoContainer = videoContainer;
 	_.each(videoIdList, function(element, index, list) {	
 		var videoMap = videoIdInfoMap[element];
@@ -298,8 +294,13 @@ function populateVideoContents(videoIdList, videoIdInfoMap, videoContainer) {
 		//$buttonAnchor1.attr("title","Add to Favourite")
 		/*var $videoIdDiv = $('<div style="display:none">');
 		$videoIdDiv.text(videoMap.video_id);*/
-		$buttonDiv.append($buttonAnchor);
-		$buttonDiv.append($buttonAnchor1);
+		if (playListName != "myPlayList") {
+			$buttonDiv.append($buttonAnchor);
+		}
+		if (playListName != "favouritePlayList") {
+			$buttonDiv.append($buttonAnchor1);
+		}
+		// $buttonDiv.append($buttonAnchor1);
 		var infoStr = "Title: "+trim(videoMap.title)+"<BR>"+"Total Views: "+trim(videoMap.total_views)+"<BR>"+"Likes: "+trim(videoMap.likes)+" DisLikes: "+trim(videoMap.dislikes);
 		infoStr += "<BR>"+"Avg Rating: "+trim(videoMap.avg_rating);
 		$infoDiv.html(infoStr);
