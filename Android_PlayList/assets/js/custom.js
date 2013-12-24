@@ -15,11 +15,15 @@
  * 
  * */
 
+// Global Variables
+
+var $videoContainer;
+
 
 $(document).on('pageinit', '[data-role="page"]', function() {
 	// alert('A page with an id of "aboutPage" was just pageinit by jQuery Mobile!');
-	localStorage.setObj('favouritePlayList',[]);
-	localStorage.setObj('myPlayList',[]);
+	//localStorage.setObj('favouritePlayList',[]);
+	// localStorage.setObj('myPlayList',[]);
 	populatePlayListMenu();
 	populatefavouritePlayListMenu(localStorage.getObj('favouritePlayList'));
 	populateMyPlayListMenu(localStorage.getObj('myPlayList'));
@@ -86,16 +90,18 @@ $(document).on('pageinit', '[data-role="page"]', function() {
 		//console.log(" current target :: "+$(current));
 		console.log(" this :: "+$li.attr("data-vmapp-val"));
 		// clear the contents
-		var $videoContent = $("ul#video-list");
-		$videoContent.html("");
+		$videoContainer = $("ul#video-list");
+		$videoContainer.html("");
 		
 		// first check if the li element list in localstorage, if yes pull it from there.
 		var liElementList = localStorage.getObj($.trim($li.attr("data-vmapp-val")));
+		
+		var myPlayList = localStorage.getObj('myPlayList');
+		var favouritePlayList = localStorage.getObj('favouritePlayList');
+		
 		if (liElementList) {
-			var myPlayList = localStorage.getObj('myPlayList');
-			var favouritePlayList = localStorage.getObj('favouritePlayList');
-			$videoContent.html(liElementList);
-			var liElementList = $videoContent.find('li');
+			$videoContainer.html(liElementList);
+			var liElementList = $videoContainer.find('li');
 			_.each(liElementList, function(element, index, list) {
 				var $liElement = $(element);
 				var videoId = $liElement.attr('data-video-id');
@@ -127,16 +133,17 @@ $(document).on('pageinit', '[data-role="page"]', function() {
 			 * */
 			var videoIdBasedMap = localStorage.getObj("videoIdBasedMap");
 			
-			$videoContent = populateVideoContents(videoIdListVal, videoIdBasedMap, $videoContent);			
+			$videoContainer = populateVideoContents(videoIdListVal, videoIdBasedMap, null, favouritePlayList, myPlayList);			
 			// store the li list in localstorage
-			localStorage.setObj($.trim($li.attr("data-vmapp-val")), $videoContent.html());
+			localStorage.setObj($.trim($li.attr("data-vmapp-val")), $videoContainer.html());
 		}
 		// console.log("video UL :: "+$videoContent.html());
 		// refresh the UL
-		$videoContent.listview("refresh");
+		$videoContainer.listview("refresh");
 		// refresh the control group div
 		$("#demo-page").trigger("create");
 		$('div#headerDiv').find('h1').html("Showing Videos from PlayList");
+		$('div#headerDiv').find('h1').attr("data-playlist-name", "");
 	});
 	
 	// My PlayList
@@ -146,14 +153,18 @@ $(document).on('pageinit', '[data-role="page"]', function() {
 		// populate them in Li
 		// refresh the list
 		var myPlayList = localStorage.getObj('myPlayList');
-		var $videoContainer = $("ul#video-list");
+		$videoContainer = $("ul#video-list");
 		var videoIdBasedMap = localStorage.getObj("videoIdBasedMap");
 		$videoContainer.html("");
-		$videoContainer = populateVideoContents(myPlayList, videoIdBasedMap, $videoContainer, "myPlayList");
+		
+		var favouritePlayList = localStorage.getObj('favouritePlayList');
+		
+		$videoContainer = populateVideoContents(myPlayList, videoIdBasedMap, "myPlayList", favouritePlayList);
 		$videoContainer.listview("refresh");
 		// refresh the control group div
 		$("#demo-page").trigger("create");
 		$('div#headerDiv').find('h1').html("Showing Videos from My PlayList");
+		$('div#headerDiv').find('h1').attr("data-playlist-name", "myPlayList");
 	});
 	
 	// Favourates
@@ -163,41 +174,51 @@ $(document).on('pageinit', '[data-role="page"]', function() {
 		// populate them in Li
 		// refresh the list
 		var favouritePlayList = localStorage.getObj('favouritePlayList');
-		var $videoContainer = $("ul#video-list");
+		$videoContainer = $("ul#video-list");
 		var videoIdBasedMap = localStorage.getObj("videoIdBasedMap");
 		$videoContainer.html("");
-		$videoContainer = populateVideoContents(favouritePlayList, videoIdBasedMap, $videoContainer,"favouritePlayList");
+		
+		var myPlayList = localStorage.getObj('myPlayList');
+		
+		$videoContainer = populateVideoContents(favouritePlayList, videoIdBasedMap, "favouritePlayList", null, myPlayList);
 		$videoContainer.listview("refresh");
 		// refresh the control group div
 		$("#demo-page").trigger("create");
 		$('div#headerDiv').find('h1').html("Showing Videos from Favourites");
-		
+		$('div#headerDiv').find('h1').attr("data-playlist-name", "favouritePlayList");
 	});
 	
 	$('ul#video-list').on('click', 'a.starButton', function(evt) {
 		$this = $(this);
-		$this.toggleClass('starSelected');
+		//$this.toggleClass('starSelected');
 		var liElement = $this.closest('li');
 		var videoId = $(liElement).attr('data-video-id');
 		var favouritePlayList = localStorage.getObj('favouritePlayList');
 		if ($this.hasClass('starSelected')) {
+			// Dont do anything
+			
 			// add the li element in the localstorage
 			// and add the element in LHS menu as well
 			// change the tooltip text
-			$this.attr('title','Added to Favourite.');
+			/*$this.attr('title','Added to Favourite.');
 			if (favouritePlayList) {
 				favouritePlayList.push(videoId);
 				// favouritePlayListMap[videoId] = liElement;
 			} else {
 				favouritePlayList = [];
 				favouritePlayList.push(videoId);
-			}
+			}*/
 		} else {
-			// remove the element from localstorage
-			// remove from LHS menu
-			// change the tooltip text
-			$this.attr('title','Add to Favourtie.');
-			favouritePlayList = _.omit(favouritePlayList, videoId);
+			
+			// add Class
+			$this.addClass('starSelected');
+			if (favouritePlayList) {
+				favouritePlayList.push(videoId);
+			} else {
+				favouritePlayList = [];
+				favouritePlayList.push(videoId);
+			}
+			//favouritePlayList = _.omit(favouritePlayList, videoId);
 		}
 		localStorage.setObj('favouritePlayList', favouritePlayList);
 		console.log("favouritePlayList :: ",favouritePlayList);
@@ -209,16 +230,26 @@ $(document).on('pageinit', '[data-role="page"]', function() {
 	
 	$('ul#video-list').on('click', 'a.addButton', function(evt) {
 		$this = $(this);
-		$this.toggleClass('plusAdded');
+	//	$this.toggleClass('plusAdded');
 		var myPlayList = localStorage.getObj('myPlayList');
 		var liElement = $this.closest('li');
 		var videoId = $(liElement).attr('data-video-id');
 		// var $myPlayListUl = $('ul#myPlayListUl');
 		if ($this.hasClass('plusAdded')) {
-			// add the li element in the localstorage
+			
+			// Do not do anything
+			/*// add the li element in the localstorage
 			// and add the element in LHS menu as well
 			// change the tooltip text
 			$this.attr('title','Added to My PlayList');
+*/			
+		} else {
+			// remove the element from localstorage
+			// remove from LHS menu
+			// change the tooltip text
+			//$this.attr('title','Add to My PlayList.');
+			//myPlayList = _.omit(myPlayList, videoId);
+			$this.addClass('plusAdded');
 			if (myPlayList) {
 				myPlayList.push(videoId);
 				// favouritePlayListMap[videoId] = liElement;
@@ -226,12 +257,6 @@ $(document).on('pageinit', '[data-role="page"]', function() {
 				myPlayList = [];
 				myPlayList.push(videoId);
 			}
-		} else {
-			// remove the element from localstorage
-			// remove from LHS menu
-			// change the tooltip text
-			$this.attr('title','Add to My PlayList.');
-			myPlayList = _.omit(myPlayList, videoId);
 		}
 		localStorage.setObj('myPlayList', myPlayList);
 		console.log("myPlayListMap :: ",myPlayList);
@@ -239,6 +264,34 @@ $(document).on('pageinit', '[data-role="page"]', function() {
 		// populate my playlist
 		populateMyPlayListMenu(myPlayList);
 	});
+	
+	
+	$('ul#video-list').on('click', 'a.deleteButton', function(evt) {
+		$this = $(this);
+		var $liElement = $this.closest('li');
+		console.log("delete button clicked ::");
+		var playListName = $('div#headerDiv').find('h1').attr("data-playlist-name");
+		if (playListName === "myPlayList") {
+			var myPlayList = localStorage.getObj('myPlayList')
+			myPlayList = _.without(myPlayList, $liElement.attr('data-video-id'));
+			localStorage.setObj('myPlayList', myPlayList);
+			$liElement.remove();
+			console.log("Delete :: myPlayList", myPlayList);
+			// render the menu again
+			populateMyPlayListMenu(myPlayList);
+		} else if (playListName === "favouritePlayList") {
+			var favouritePlayList = localStorage.getObj('favouritePlayList');
+			favouritePlayList = _.without(favouritePlayList, $liElement.attr('data-video-id'));
+			localStorage.setObj('favouritePlayList', favouritePlayList);
+			$liElement.remove();
+			console.log("Delete :: favouritePlayList", favouritePlayList);
+			// Populate the menu
+			populatefavouritePlayListMenu(favouritePlayList);
+		}
+		return;
+		
+	});
+	
 	
 	/*$.getJSON( "js/videos.js", function( json ) {
 		console.log( "JSON Data: " + JSON.stringify(json));
@@ -279,28 +332,75 @@ $(document).ready(function () {
 });
 
 
-function populateVideoContents(videoIdList, videoIdInfoMap, videoContainer, playListName) {
-	var $videoContainer = videoContainer;
+function populateVideoContents(videoIdList, videoIdInfoMap, playListName, favouritePlayList, myPlayList) {
+	// var $videoContainer = videoContainer;
+	var videoList; 
+		if (playListName === "myPlayList" || playListName === "favouritePlayList") {
+			videoList = videoIdList.reverse();
+		} else {
+			videoList = videoIdList;
+		}
+		
 	_.each(videoIdList, function(element, index, list) {	
 		var videoMap = videoIdInfoMap[element];
 		var $videoLi = $("<li>");
+		var videoId = trim(videoMap.video_id);
 		$videoLi.attr('data-video-id', trim(videoMap.video_id));
 		var $videoImg = $("<img>");
 		var $infoDiv = $("<div data-role='controlgroup' data-type='vertical'>");
 		var $buttonDiv = $("<div data-role='controlgroup' data-type='horizontal'>");
 		var $buttonAnchor = $("<a href='#' data-role='button' data-icon='plus' data-iconpos='notext' data-inline='true' class='addButton' title='Add to my playlist'>");
 		var $buttonAnchor1 = $("<a href='#' data-role='button' data-icon='star' data-iconpos='notext' data-inline='true' class='starButton' title='Add to Favourite'>");
+		var $buttonDelete = $("<a href='#' data-role='button' data-icon='delete' data-iconpos='notext' data-inline='true' class='deleteButton'>");
 		//$buttonAnchor.attr("title","Add to my playlist")
 		//$buttonAnchor1.attr("title","Add to Favourite")
 		/*var $videoIdDiv = $('<div style="display:none">');
 		$videoIdDiv.text(videoMap.video_id);*/
+		
+		// If its normal playlist then do this
+		if (!playListName) {
+			// if the element is in favourite playlist then select it
+			if (_.indexOf(favouritePlayList, videoId) != -1) {
+				$buttonAnchor1.addClass('starSelected');
+				//.remove();
+			}
+			if (_.indexOf(myPlayList, videoId) != -1) {
+				$buttonAnchor.addClass('plusAdded');
+				//.remove();
+			}
+		}
+		
+		if (playListName === "myPlayList") {
+			if (_.indexOf(favouritePlayList, videoId) != -1) {
+				$buttonAnchor1.addClass('starSelected');
+				//.remove();
+			}
+		}
+		
+		if (playListName === "favouritePlayList") {
+			if (_.indexOf(myPlayList, videoId) != -1) {
+				$buttonAnchor.addClass('plusAdded');
+				//.remove();
+			}
+		}
+		
 		if (playListName != "myPlayList") {
 			$buttonDiv.append($buttonAnchor);
 		}
+		
 		if (playListName != "favouritePlayList") {
 			$buttonDiv.append($buttonAnchor1);
 		}
 		// $buttonDiv.append($buttonAnchor1);
+		
+		//$buttonDiv.append($buttonAnchor);
+		// $buttonDiv.append($buttonAnchor1);
+		
+		if (playListName === "myPlayList" || playListName === "favouritePlayList") {
+			//$buttonAnchor1.attr("data-icon", "delete");
+			$buttonDiv.append($buttonDelete);
+		}
+		
 		var infoStr = "Title: "+trim(videoMap.title)+"<BR>"+"Total Views: "+trim(videoMap.total_views)+"<BR>"+"Likes: "+trim(videoMap.likes)+" DisLikes: "+trim(videoMap.dislikes);
 		infoStr += "<BR>"+"Avg Rating: "+trim(videoMap.avg_rating);
 		$infoDiv.html(infoStr);
@@ -308,7 +408,7 @@ function populateVideoContents(videoIdList, videoIdInfoMap, videoContainer, play
 		$videoLi.append($videoImg).append($infoDiv).append($buttonDiv);
 		$videoContainer.append($videoLi);
 		infoStr = "";
-		console.log("video LI :: "+$videoLi.html());
+		// console.log("video LI :: "+$videoLi.html());
 	});
 	return $videoContainer;
 	//localStorage.setObj(key, $videoContainer.html());
@@ -317,15 +417,14 @@ function populateVideoContents(videoIdList, videoIdInfoMap, videoContainer, play
 
 
 function populatePlayListMenu() {
-	// Ajax call to get the playList
-	// No need to do ajax as the json is coming from local json file
+	
 	var videoListMap;
 	// Call another function to do the business logic on the result
 	if (!localStorage.getObj('videoListService')) {
 		console.log(" Not found in local storage :: calling build JSON function :: ");
 		videoListMap = buildVideoListDS(videosJsonData);
 		localStorage.setObj('videoListService', videoListMap);
-		console.log(" Setting object in localstorage :: "+videoListMap);
+		console.log(" Setting object in localstorage :: ");
 	} 
 	// get it from localstorage
 	videoListMap = localStorage.getObj('videoListService');
@@ -353,7 +452,8 @@ function populatefavouritePlayListMenu(favouritePlayList) {
 			$favouritePlayListUl.find('li.ui-first-child').find('span.ui-icon').remove();
 			return true;
 		} else {
-			$favouritePlayListUl.append('<li><a href="#">Videos ('+favouritePlayList.length+') </a></li>');
+			localStorage.setObj("favouritePlayListMenu", '<li><a href="#">Videos ('+favouritePlayList.length+') </a></li>');
+			$favouritePlayListUl.append(localStorage.getObj("favouritePlayListMenu"));
 			$favouritePlayListUl.listview("refresh");
 			return true;
 		}
@@ -379,7 +479,8 @@ function populateMyPlayListMenu(myPlayList) {
 			$myPlayListUl.find('li.ui-first-child').find('span.ui-icon').remove();
 			return true;
 		} else {
-			$myPlayListUl.append('<li><a href="#">Videos ('+myPlayList.length+') </a></li>');
+			localStorage.setObj("myPlayListMenu", '<li><a href="#">Videos ('+myPlayList.length+') </a></li>');
+			$myPlayListUl.append(localStorage.getObj("myPlayListMenu"));
 			$myPlayListUl.listview("refresh");
 			return true;
 		}
@@ -431,8 +532,8 @@ function buildVideoListDS(videosJsonData) {
     // set the video ID based Map
     localStorage.setObj("videoIdBasedMap", videoIdBasedMap);
     
-    console.log(" new data structure :: " + JSON.stringify(videoListMap));
-    console.log(" new DS For Main Content :: " + JSON.stringify(videoIdBasedMap));
+   // console.log(" new data structure :: " + JSON.stringify(videoListMap));
+   // console.log(" new DS For Main Content :: " + JSON.stringify(videoIdBasedMap));
     return videoListMap;
 //alert("my map" + JSON.stringify(myMap));
    /* $.each(myMap, function (key, value) {
