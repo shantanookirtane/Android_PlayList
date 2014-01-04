@@ -18,73 +18,38 @@
 // Global Variables
 
 var $videoContainer;
+videojs.options.flash.swf = "video-js.swf";
 
+/*$(document).bind('mobileinit', function() {
+	// For loading image
+	$.mobile.loader.prototype.options.text = "loading";
+	$.mobile.loader.prototype.options.textVisible = false;
+	$.mobile.loader.prototype.options.theme = "a";
+	$.mobile.loader.prototype.options.html = "<div class='custom-spinner'></div>";
+});*/
+	
 
 $(document).on('pageinit', '[data-role="page"]', function() {
-	// alert('A page with an id of "aboutPage" was just pageinit by jQuery Mobile!');
-	//localStorage.setObj('favouritePlayList',[]);
-	// localStorage.setObj('myPlayList',[]);
+	
 	populatePlayListMenu();
 	populatefavouritePlayListMenu(localStorage.getObj('favouritePlayList'));
 	populateMyPlayListMenu(localStorage.getObj('myPlayList'));
-	//var data = videosJsonData;
-	//console.log("sfdssdfs ::: "+ JSON.stringify(data));
-//	$('#contentVideosId').jScrollPane();
-	
-	// My playlist 
-/*	$('div#lhsMenuDiv').bind('click', 'div#myPlayListDiv', function(evt) {
-		console.log("myPlayListDiv :: clicked");
-		var myPlayListMap = localStorage.getObj('myPlayList');
-		var $myPlayListUl = $('ul#myPlayListUl');
-		$myPlayListUl.html("");
-		if (myPlayListMap) {
-			var videoIdList = _.keys(myPlayListMap);
-			if (videoIdList.length === 0) {
-				$myPlayListUl.append('<li><a href="#">No items found</a></li>');
-				$myPlayListUl.listview("refresh");
-				$myPlayListUl.find('li.ui-first-child').find('span.ui-icon').remove();
-				return true;
-			} else {
-				$myPlayListUl.append('<li><a href="#">Videos ('+videoIdList.length+') </a></li>');
-				$myPlayListUl.listview("refresh");
-				return true;
-			}
-		} else {
-			$myPlayListUl.append('<li><a href="#">No items found</a></li>');
-			$myPlayListUl.listview("refresh");
-			$myPlayListUl.find('li.ui-first-child').find('span.ui-icon').remove();
-			return true;
-		}
-	});*/
-	
-	// Favourite list
-	/*$('div#lhsMenuDiv').bind('click', 'div#favouritePlayListDiv', function(evt) {
-		console.log("favouritePlayListDiv :: clicked");
-		var favouritePlayListMap = localStorage.getObj('favouritePlayList');
-		var $favouritePlayListUl = $('ul#favouritePlayListUl');
-		$favouritePlayListUl.html("");
-		if (favouritePlayListMap) {
-			var videoIdList = _.keys(favouritePlayListMap);
-			if (videoIdList.length === 0) {
-				$favouritePlayListUl.append('<li><a href="#">No items found</a></li>');
-				$favouritePlayListUl.listview("refresh");
-				$favouritePlayListUl.find('li.ui-first-child').find('span.ui-icon').remove();
-				return true;
-			} else {
-				$favouritePlayListUl.append('<li><a href="#">Videos ('+videoIdList.length+') </a></li>');
-				$favouritePlayListUl.listview("refresh");
-				return true;
-			}
-		} else {
-			$favouritePlayListUl.append('<li><a href="#">No items found</a></li>');
-			$favouritePlayListUl.listview("refresh");
-			$favouritePlayListUl.find('li.ui-first-child').find('span.ui-icon').remove();
-			return true;
-		}
-	});*/
 	
 	// Video PlayList 
 	$('ul#playListUl').on('click', 'li', function(evt) {
+		
+		/*$.mobile.loading("show", {
+            text: "loading videos..",
+            textVisible: true
+        });*/
+		
+		/*setTimeout(function () {
+	        $.mobile.loading("show", {
+	            text: "loading videos..",
+	            textVisible: true
+	        });
+	    }, 5);
+	*/	
 		//var current = evt.currentTarget;
 		var $li = $(this);	
 		//console.log(" current target :: "+$(current));
@@ -93,7 +58,7 @@ $(document).on('pageinit', '[data-role="page"]', function() {
 		$videoContainer = $("ul#video-list");
 		$videoContainer.html("");
 		
-		// first check if the li element list in localstorage, if yes pull it from there.
+		// first check if the li elements list in localstorage, if yes pull it from there.
 		var liElementList = localStorage.getObj($.trim($li.attr("data-vmapp-val")));
 		
 		var myPlayList = localStorage.getObj('myPlayList');
@@ -115,6 +80,7 @@ $(document).on('pageinit', '[data-role="page"]', function() {
 					//.remove();
 				}
 			});
+			//$.mobile.loading('hide');
 		} else {
 			var videoListMap = localStorage.getObj('videoListService');
 			var videoIdListVal = videoListMap[$.trim($li.attr("data-vmapp-val"))].videoIdList;
@@ -136,14 +102,22 @@ $(document).on('pageinit', '[data-role="page"]', function() {
 			$videoContainer = populateVideoContents(videoIdListVal, videoIdBasedMap, null, favouritePlayList, myPlayList);			
 			// store the li list in localstorage
 			localStorage.setObj($.trim($li.attr("data-vmapp-val")), $videoContainer.html());
+		//	$.mobile.loading('hide');
 		}
 		// console.log("video UL :: "+$videoContent.html());
 		// refresh the UL
 		$videoContainer.listview("refresh");
+		
+		
+		
 		// refresh the control group div
 		$("#demo-page").trigger("create");
-		$('div#headerDiv').find('h1').html("Showing Videos from PlayList");
+		$('div#headerDiv').find('h1').html("PlayList");
 		$('div#headerDiv').find('h1').attr("data-playlist-name", "");
+		
+		//
+		// $.unblockUI();
+		
 	});
 	
 	// My PlayList
@@ -163,7 +137,7 @@ $(document).on('pageinit', '[data-role="page"]', function() {
 		$videoContainer.listview("refresh");
 		// refresh the control group div
 		$("#demo-page").trigger("create");
-		$('div#headerDiv').find('h1').html("Showing Videos from My PlayList");
+		$('div#headerDiv').find('h1').html("My PlayList");
 		$('div#headerDiv').find('h1').attr("data-playlist-name", "myPlayList");
 	});
 	
@@ -184,7 +158,7 @@ $(document).on('pageinit', '[data-role="page"]', function() {
 		$videoContainer.listview("refresh");
 		// refresh the control group div
 		$("#demo-page").trigger("create");
-		$('div#headerDiv').find('h1').html("Showing Videos from Favourites");
+		$('div#headerDiv').find('h1').html("Favourites");
 		$('div#headerDiv').find('h1').attr("data-playlist-name", "favouritePlayList");
 	});
 	
@@ -196,18 +170,6 @@ $(document).on('pageinit', '[data-role="page"]', function() {
 		var favouritePlayList = localStorage.getObj('favouritePlayList');
 		if ($this.hasClass('starSelected')) {
 			// Dont do anything
-			
-			// add the li element in the localstorage
-			// and add the element in LHS menu as well
-			// change the tooltip text
-			/*$this.attr('title','Added to Favourite.');
-			if (favouritePlayList) {
-				favouritePlayList.push(videoId);
-				// favouritePlayListMap[videoId] = liElement;
-			} else {
-				favouritePlayList = [];
-				favouritePlayList.push(videoId);
-			}*/
 		} else {
 			
 			// add Class
@@ -236,13 +198,7 @@ $(document).on('pageinit', '[data-role="page"]', function() {
 		var videoId = $(liElement).attr('data-video-id');
 		// var $myPlayListUl = $('ul#myPlayListUl');
 		if ($this.hasClass('plusAdded')) {
-			
 			// Do not do anything
-			/*// add the li element in the localstorage
-			// and add the element in LHS menu as well
-			// change the tooltip text
-			$this.attr('title','Added to My PlayList');
-*/			
 		} else {
 			// remove the element from localstorage
 			// remove from LHS menu
@@ -289,44 +245,32 @@ $(document).on('pageinit', '[data-role="page"]', function() {
 			populatefavouritePlayListMenu(favouritePlayList);
 		}
 		return;
-		
-	});
-	
-	
-	/*$.getJSON( "js/videos.js", function( json ) {
-		console.log( "JSON Data: " + JSON.stringify(json));
-		$("ul#video-list").html("");
-		$("ul#video-list").html(json);
-		
-	});*/
-	
-   /* $.ajax({
-        url: "js/videos.js",
-        dataType: "jsonp",
-        async: true,
-        success: function (result) {
-            ajax.parseJSONP(result);
-        },
-        error: function (request,error) {
-            alert('Network error has occurred please try again!');
-        }
-    });*/
-	
-	
+	});	
 });
 
+
+function showLoader() {
+	$.mobile.loading("show", {
+        text: "loading videos..",
+        textVisible: true
+    });
+	return this;
+}
+
+function hideLoader() {
+	$.mobile.loading('hide');
+	
+}
+
 $(document).on('pagebeforeshow', '[data-role="page"]', function(){
-//	$('#video-list').jScrollPane();
+  //$('#video-list').jScrollPane();
 });
 
 
 $(document).ready(function () {
 	// resize videos
 	// resizeVideos();
-/*	$('div.video-wrapper').jScrollPane({
-		verticalDragMinHeight: 20,
-		verticalDragMaxHeight: 40
-	});*/
+	// $('div.video-wrapper').jScrollPane();
 	
 	//$("ul#video-list").listview("refresh");
 });
@@ -345,17 +289,26 @@ function populateVideoContents(videoIdList, videoIdInfoMap, playListName, favour
 		var videoMap = videoIdInfoMap[element];
 		var $videoLi = $("<li>");
 		var videoId = trim(videoMap.video_id);
-		$videoLi.attr('data-video-id', trim(videoMap.video_id));
-		var $videoImg = $("<img>");
+		$videoLi.attr('data-video-id', videoId);
+		/*var $videoEle = $("<video>");*/
+		var iframeDiv = $("<div class='video-container-div' style='display:block'>");
+		var iFrameEle = $('<iframe width="800" height="450" frameborder="0">');
+		iFrameEle.attr('src', 'http://www.youtube.com/embed/'+videoId);
+		iframeDiv.append(iFrameEle);
+		/*$videoEle.attr('id', videoId);
+		$videoEle.attr('controls', "true");
+		$videoEle.attr('autoplay', "true");
+		$videoEle.attr('preload', "auto");
+		$videoEle.attr('width', "640");
+		$videoEle.attr('height', "264");
+		$videoEle.attr('poster', trim(videoMap.thumbnail));
+		$videoEle.attr('class', "video-js vjs-default-skin vjs-big-play-centered");*/
+		// var $videoImg = $("<img>");
 		var $infoDiv = $("<div data-role='controlgroup' data-type='vertical'>");
 		var $buttonDiv = $("<div data-role='controlgroup' data-type='horizontal'>");
 		var $buttonAnchor = $("<a href='#' data-role='button' data-icon='plus' data-iconpos='notext' data-inline='true' class='addButton' title='Add to my playlist'>");
 		var $buttonAnchor1 = $("<a href='#' data-role='button' data-icon='star' data-iconpos='notext' data-inline='true' class='starButton' title='Add to Favourite'>");
 		var $buttonDelete = $("<a href='#' data-role='button' data-icon='delete' data-iconpos='notext' data-inline='true' class='deleteButton'>");
-		//$buttonAnchor.attr("title","Add to my playlist")
-		//$buttonAnchor1.attr("title","Add to Favourite")
-		/*var $videoIdDiv = $('<div style="display:none">');
-		$videoIdDiv.text(videoMap.video_id);*/
 		
 		// If its normal playlist then do this
 		if (!playListName) {
@@ -404,9 +357,17 @@ function populateVideoContents(videoIdList, videoIdInfoMap, playListName, favour
 		var infoStr = "Title: "+trim(videoMap.title)+"<BR>"+"Total Views: "+trim(videoMap.total_views)+"<BR>"+"Likes: "+trim(videoMap.likes)+" DisLikes: "+trim(videoMap.dislikes);
 		infoStr += "<BR>"+"Avg Rating: "+trim(videoMap.avg_rating);
 		$infoDiv.html(infoStr);
-		$videoImg.attr("src", trim(videoMap.thumbnail));
-		$videoLi.append($videoImg).append($infoDiv).append($buttonDiv);
+		//$videoImg.attr("src", trim(videoMap.thumbnail));
+		$videoLi.append(iframeDiv).append($infoDiv).append($buttonDiv);
 		$videoContainer.append($videoLi);
+		/*var youTubeURL = "https://www.youtube.com/watch?v="+videoId;
+		videojs(videoId, { 
+		      "techOrder": ["youtube"],
+		      "src": youTubeURL},
+		    function() {
+		     // do nothing
+		});*/
+		// $videoEle.attr('data-setup', "{'techOrder':['youtube'], 'src':"+youTubeURL+"}");
 		infoStr = "";
 		// console.log("video LI :: "+$videoLi.html());
 	});

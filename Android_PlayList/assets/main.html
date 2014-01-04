@@ -5,23 +5,26 @@
 	        <meta name="HandheldFriendly" content="True">
 	        <meta name="MobileOptimized" content="320">
 	        <meta name="viewport" content="width=device-width">
+	        <!-- <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; minimum-scale=1.0; user-scalable=no; target-densityDpi=device-dpi"/> -->
 	        
 	        <!-- CSS -->
 	        <link rel="stylesheet" href="css/plugin/normalize.css">
 	        <link rel="stylesheet" href="css/plugin/jquery.mobile-1.3.2.css">
 	        <link rel="stylesheet" href="css/plugin/jquery.jscrollpane.css">
+	        <link rel="stylesheet" href="css/plugin/video-js.css">
 	        <link rel="stylesheet" href="css/custom.css">
-	        
-	        <!-- Scripts -->
+	       		
+	<!-- Scripts -->
 	        <script src="js/plugin/jquery-1.9.0.min.js"></script>
-	        <script src="js/plugin/modernizr-2.6.1.min.js"></script>
+	        <script src="js/plugin/modernizr-2.7.1.min.js"></script>
 	        <script src="js/plugin/jquery.mobile-1.3.2.min.js"></script>
 	        <script src="js/plugin/jquery.jscrollpane.min.js"></script>
 	        <script src="js/plugin/jquery.mousewheel.js"></script>
 	        <script src="js/plugin/underscore-min.js"></script>
+	        <script src="js/plugin/video.js"></script>
+	        <script src="js/plugin/vjs.youtube.js"></script> 
 	        <script src="js/videos.jsonp" type="text/javascript"></script>
-	        <script src="js/custom.js"></script>
-	        
+	        <script src="js/custom.js"></script>	
 	</head>  
 	<body>
 		<div data-url="demo-page" data-role="page" id="demo-page" data-theme="d">
@@ -31,42 +34,10 @@
 		    </div><!-- /header -->
 		    <!-- Following Div will be used to add the video lists -->
 		    <div data-role="content" id="contentVideosId" class="contentVideosClass">
-		    	<!-- Below div required for tinyscrollbar to work -->
+		    	
 		        <div class="video-wrapper">
 		            <ul data-role="listview"  id="video-list" data-theme="d">
-			            <!-- <li><iframe title="YouTube video player" src="http://www.youtube.com/embed/4Vq4s8n8vxw" ></iframe>
-			            <div data-role="controlgroup" data-type="horizontal">
-			            <a href="#" data-role="button" data-icon="plus" data-iconpos="notext" data-inline="true" class="addButton">Add to my playlist</a>
-			            <a href="#" data-role="button" data-icon="star" data-iconpos="notext" data-inline="true" class="starButton">Add to Favourite</a></div>
-			            </li>
-			        	<li><iframe title="YouTube video player" src="http://www.youtube.com/embed/4Vq4s8n8vxw" ></iframe>
-			        	<div data-role="controlgroup" data-type="horizontal"><a href="#" data-role="button" data-icon="plus" data-iconpos="notext" data-inline="true" class="addButton">Add to my playlist</a>
-			            <a href="#" data-role="button" data-icon="star" data-iconpos="notext" data-inline="true" class="starButton">Add to Favourite</a></div></li>
-			        	<li><iframe title="YouTube video player" src="http://www.youtube.com/embed/lzQgAR_J1PI?wmode=transparent" ></iframe>
-			        	<div data-role="controlgroup" data-type="horizontal"><a href="#" data-role="button" data-icon="plus" data-iconpos="notext" data-inline="true" class="addButton">Add to my playlist</a>
-			            <a href="#" data-role="button" data-icon="star" data-iconpos="notext" data-inline="true" class="starButton">Add to Favourite</a></div></li>
-			        	<li><iframe title="YouTube video player" src="http://www.youtube.com/embed/lzQgAR_J1PI?wmode=transparent" ></iframe>
-			        	<div data-role="controlgroup" data-type="horizontal"><a href="#" data-role="button" data-icon="plus" data-iconpos="notext" data-inline="true" class="addButton">Add to my playlist</a>
-			            <a href="#" data-role="button" data-icon="star" data-iconpos="notext" data-inline="true" class="starButton">Add to Favourite</a></div></li>
-			        	<li><iframe title="YouTube video player" src="http://www.youtube.com/embed/lzQgAR_J1PI?wmode=transparent" ></iframe>
-			        	<div data-role="controlgroup" data-type="horizontal"><a href="#" data-role="button" data-icon="plus" data-iconpos="notext" data-inline="true" class="addButton">Add to my playlist</a>
-			            <a href="#" data-role="button" data-icon="star" data-iconpos="notext" data-inline="true" class="starButton">Add to Favourite</a></div></li>
-			        	<li><iframe title="YouTube video player" src="http://www.youtube.com/embed/lzQgAR_J1PI?wmode=transparent" seamless></iframe>
-			        	<div data-role="controlgroup" data-type="horizontal"><a href="#" data-role="button" data-icon="plus" data-iconpos="notext" data-inline="true" class="addButton">Add to my playlist</a>
-			            <a href="#" data-role="button" data-icon="star" data-iconpos="notext" data-inline="true" class="starButton">Add to Favourite</a></div></li>
-			        	<li><iframe title="YouTube video player" src="http://www.youtube.com/embed/lzQgAR_J1PI?wmode=transparent" seamless></iframe>
-			        	<div data-role="controlgroup" data-type="horizontal"><a href="#" data-role="button" data-icon="plus" data-iconpos="notext" data-inline="true" class="addButton">Add to my playlist</a>
-			            <a href="#" data-role="button" data-icon="star" data-iconpos="notext" data-inline="true" class="starButton">Add to Favourite</a></div></li>
-			        	<li><iframe title="YouTube video player" src="http://www.youtube.com/embed/lzQgAR_J1PI?wmode=transparent" seamless></iframe>
-			        	<div data-role="controlgroup" data-type="horizontal"><a href="#" data-role="button" data-icon="plus" data-iconpos="notext" data-inline="true" class="addButton">Add to my playlist</a>
-			            <a href="#" data-role="button" data-icon="star" data-iconpos="notext" data-inline="true" class="starButton">Add to Favourite</a></div></li>
-			        	<li><iframe title="YouTube video player" src="http://www.youtube.com/embed/lzQgAR_J1PI?wmode=transparent" seamless></iframe>
-			        	<div data-role="controlgroup" data-type="horizontal"><a href="#" data-role="button" data-icon="plus" data-iconpos="notext" data-inline="true" class="addButton">Add to my playlist</a>
-			            <a href="#" data-role="button" data-icon="star" data-iconpos="notext" data-inline="true" class="starButton">Add to Favourite</a></div></li>
-			        	<li><iframe title="YouTube video player" src="http://www.youtube.com/embed/lzQgAR_J1PI?wmode=transparent" seamless></iframe></li>
-			        	<li><iframe title="YouTube video player" src="http://www.youtube.com/embed/lzQgAR_J1PI?wmode=transparent" seamless></iframe></li>
-			        	<li><iframe title="YouTube video player" src="http://www.youtube.com/embed/lzQgAR_J1PI?wmode=transparent" seamless></iframe></li>
-			        	<li><iframe title="YouTube video player" src="http://www.youtube.com/embed/lzQgAR_J1PI?wmode=transparent" seamless></iframe></li> -->     
+			               
 		            </ul>
 		        </div><!-- /video=wrapper -->
 		    </div><!-- /content -->
@@ -99,38 +70,3 @@
 		</div>
 	</body>
 </html>
-
-
-
-<!--           			<div data-role="collapsible-set" data-inset="false" data-iconpos="right" data-theme="b" data-content-theme="d">
-	            		<div data-role="collapsible">
-	            		<h3>PlayList</h3>
-	              			<ul data-role="listview">
-	                			<li><a href="#">Road</a></li>
-	                			<li><a href="#">ATB</a></li>
-	                			<li><a href="#">Fixed Gear</a></li>
-	                			<li><a href="#">Cruiser</a></li>
-	              			</ul>
-	            		</div>
-            		</div> -->
-            	
-<!-- 		        <div data-role="listview" data-inset="false" data-iconpos="right" data-theme="d" data-content-theme="d" class="playListCat">
-		        	<ul data-role="listview">
-		                <li><a href="#">Road</a></li>
-		                <li><a href="#">ATB</a></li>
-		                <li><a href="#">Fixed Gear</a></li>
-		                <li><a href="#">Cruiser</a></li>
-              		</ul>
-		        </div> --> <!--playListCat  --> <!-- data-role="collapsible" -->
-		        
-		        
-		         <!-- <div data-role="panel" id="right-panel" data-display="overlay" data-position="right" data-theme="c">
-		        <ul data-role="listview" data-theme="d" data-icon="false">
-		            <li data-icon="delete"><a href="#" data-rel="close">Close</a></li>
-		            <li data-role="list-divider">Share this page</li>
-		            <li><a href="#">Twitter</a></li>
-		            <li><a href="#">Facebook</a></li>
-		            <li><a href="#">Google +</a></li>
-		            <li><a href="#">Mail</a></li>
-		        </ul>
-		    </div> --><!-- /panel -->

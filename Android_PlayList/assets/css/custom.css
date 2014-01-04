@@ -65,9 +65,9 @@ as the panel before opening the panel. */
 
 /* Style for making responsive videos*/
 
-#contentVideosId {
+/* #contentVideosId {
 	position: relative;
-	padding-bottom: 56.25%; /* 16:9 */
+	padding-bottom: 56.25%; 16:9
 	padding-top: 25px;
 	height: 0;
 }
@@ -78,7 +78,7 @@ as the panel before opening the panel. */
 	left: 0;
 	width: 100%;
 	height: 100%;
-} 
+} */ 
 
 
 a.starSelected {
@@ -94,3 +94,36 @@ a.plusAdded {
       display: inline-block;
       vertical-align: middle;
  }
+
+/* .ui-loader-default {
+    opacity: 1 !important;      
+}
+
+.custom-spinner {
+    width: 37px !important;
+    height: 37px !important;
+    background-image:url('images/ajax-loader.gif');
+    display: block;
+} */
+
+
+
+.video-container-div {
+	position: relative;
+	padding-bottom: 56.25%;
+	padding-top: 30px;
+	height: 0;
+	overflow: hidden;
+}
+
+.video-container-div iframe,  
+.video-container-div object,  
+.video-container-div embed {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+}
+ 
+ 
