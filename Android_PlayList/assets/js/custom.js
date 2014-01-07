@@ -106,6 +106,7 @@ $(document).on('pageinit', '[data-role="page"]', function() {
 		}
 		// console.log("video UL :: "+$videoContent.html());
 		// refresh the UL
+		$videoContainer.prepend("<li data-role='list-divider' data-theme='a'>Video(s)</li>");
 		$videoContainer.listview("refresh");
 		
 		
@@ -134,6 +135,7 @@ $(document).on('pageinit', '[data-role="page"]', function() {
 		var favouritePlayList = localStorage.getObj('favouritePlayList');
 		
 		$videoContainer = populateVideoContents(myPlayList, videoIdBasedMap, "myPlayList", favouritePlayList);
+		$videoContainer.prepend("<li data-role='list-divider' data-theme='a'>Video(s)</li>");
 		$videoContainer.listview("refresh");
 		// refresh the control group div
 		$("#demo-page").trigger("create");
@@ -155,6 +157,7 @@ $(document).on('pageinit', '[data-role="page"]', function() {
 		var myPlayList = localStorage.getObj('myPlayList');
 		
 		$videoContainer = populateVideoContents(favouritePlayList, videoIdBasedMap, "favouritePlayList", null, myPlayList);
+		$videoContainer.prepend("<li data-role='list-divider' data-theme='a'>Video(s)</li>");
 		$videoContainer.listview("refresh");
 		// refresh the control group div
 		$("#demo-page").trigger("create");
