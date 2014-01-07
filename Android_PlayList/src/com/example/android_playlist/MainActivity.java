@@ -18,6 +18,8 @@ public class MainActivity extends Activity {
         settings.setJavaScriptEnabled(true);
         // To enable Localstorage
         settings.setDomStorageEnabled(true);
+        
+        
         webView.loadUrl("file:///android_asset/main.html");
         setContentView(webView);
     }

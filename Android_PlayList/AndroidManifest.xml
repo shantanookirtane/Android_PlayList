@@ -3,6 +3,10 @@
     package="com.example.android_playlist"
     android:versionCode="1"
     android:versionName="1.0" >
+    
+    <uses-permission android:name="android.permission.INTERNET"></uses-permission>
+    
+    
 
     <uses-sdk
         android:minSdkVersion="14"
@@ -15,13 +19,16 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name="com.example.android_playlist.MainActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name" 
+            android:configChanges="orientation|keyboard|keyboardHidden" 
+            android:screenOrientation="sensor" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        
     </application>
 
 </manifest>

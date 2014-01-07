@@ -164,6 +164,7 @@ $(document).on('pageinit', '[data-role="page"]', function() {
 	
 	$('ul#video-list').on('click', 'a.starButton', function(evt) {
 		$this = $(this);
+		evt.stopPropagation();
 		//$this.toggleClass('starSelected');
 		var liElement = $this.closest('li');
 		var videoId = $(liElement).attr('data-video-id');
@@ -192,6 +193,7 @@ $(document).on('pageinit', '[data-role="page"]', function() {
 	
 	$('ul#video-list').on('click', 'a.addButton', function(evt) {
 		$this = $(this);
+		evt.stopPropagation();
 	//	$this.toggleClass('plusAdded');
 		var myPlayList = localStorage.getObj('myPlayList');
 		var liElement = $this.closest('li');
@@ -224,6 +226,7 @@ $(document).on('pageinit', '[data-role="page"]', function() {
 	
 	$('ul#video-list').on('click', 'a.deleteButton', function(evt) {
 		$this = $(this);
+		evt.stopPropagation();
 		var $liElement = $this.closest('li');
 		console.log("delete button clicked ::");
 		var playListName = $('div#headerDiv').find('h1').attr("data-playlist-name");
@@ -245,7 +248,18 @@ $(document).on('pageinit', '[data-role="page"]', function() {
 			populatefavouritePlayListMenu(favouritePlayList);
 		}
 		return;
-	});	
+	});
+	
+	
+	$('ul#video-list').on('click', 'li', function(evt) {
+		$this = $(this);
+		var videoId = $this.attr('data-video-id');
+		var iFrameEle = $('div#contentVideosId').find('div.video-container-div').find('iframe');
+		iFrameEle.attr('src', 'http://www.youtube.com/embed/'+videoId);
+		// iframeDiv.append(iFrameEle);
+		return;
+	});
+	
 });
 
 
@@ -291,10 +305,10 @@ function populateVideoContents(videoIdList, videoIdInfoMap, playListName, favour
 		var videoId = trim(videoMap.video_id);
 		$videoLi.attr('data-video-id', videoId);
 		/*var $videoEle = $("<video>");*/
-		var iframeDiv = $("<div class='video-container-div' style='display:block'>");
+		/*var iframeDiv = $("<div class='video-container-div' style='display:block'>");
 		var iFrameEle = $('<iframe width="800" height="450" frameborder="0">');
 		iFrameEle.attr('src', 'http://www.youtube.com/embed/'+videoId);
-		iframeDiv.append(iFrameEle);
+		iframeDiv.append(iFrameEle);*/
 		/*$videoEle.attr('id', videoId);
 		$videoEle.attr('controls', "true");
 		$videoEle.attr('autoplay', "true");
@@ -303,7 +317,7 @@ function populateVideoContents(videoIdList, videoIdInfoMap, playListName, favour
 		$videoEle.attr('height', "264");
 		$videoEle.attr('poster', trim(videoMap.thumbnail));
 		$videoEle.attr('class', "video-js vjs-default-skin vjs-big-play-centered");*/
-		// var $videoImg = $("<img>");
+		var $videoImg = $("<img>");
 		var $infoDiv = $("<div data-role='controlgroup' data-type='vertical'>");
 		var $buttonDiv = $("<div data-role='controlgroup' data-type='horizontal'>");
 		var $buttonAnchor = $("<a href='#' data-role='button' data-icon='plus' data-iconpos='notext' data-inline='true' class='addButton' title='Add to my playlist'>");
@@ -357,8 +371,8 @@ function populateVideoContents(videoIdList, videoIdInfoMap, playListName, favour
 		var infoStr = "Title: "+trim(videoMap.title)+"<BR>"+"Total Views: "+trim(videoMap.total_views)+"<BR>"+"Likes: "+trim(videoMap.likes)+" DisLikes: "+trim(videoMap.dislikes);
 		infoStr += "<BR>"+"Avg Rating: "+trim(videoMap.avg_rating);
 		$infoDiv.html(infoStr);
-		//$videoImg.attr("src", trim(videoMap.thumbnail));
-		$videoLi.append(iframeDiv).append($infoDiv).append($buttonDiv);
+		$videoImg.attr("src", trim(videoMap.thumbnail));
+		$videoLi.append($videoImg).append($infoDiv).append($buttonDiv);
 		$videoContainer.append($videoLi);
 		/*var youTubeURL = "https://www.youtube.com/watch?v="+videoId;
 		videojs(videoId, { 
