@@ -18,7 +18,7 @@
 // Global Variables
 
 var $videoContainer;
-videojs.options.flash.swf = "video-js.swf";
+/*videojs.options.flash.swf = "video-js.swf";*/
 
 /*$(document).bind('mobileinit', function() {
 	// For loading image
@@ -109,10 +109,16 @@ $(document).on('pageinit', '[data-role="page"]', function() {
 		$videoContainer.prepend("<li data-role='list-divider' data-theme='a'>Video(s)</li>");
 		$videoContainer.listview("refresh");
 		
-		
-		
 		// refresh the control group div
 		$("#demo-page").trigger("create");
+		
+		// to close the menu as soon as some one clicks on any item
+		/*$('div#left-panel').toggleClass("ui-panel-open ui-panel-closed");
+		$('div#headerDiv').toggleClass("ui-panel-content-fixed-toolbar-position-left ui-panel-content-fixed-toolbar-display-reveal ui-panel-content-fixed-toolbar-open ui-panel-content-fixed-toolbar-closed");
+		$('div#contentVideosId').parent().toggleClass('ui-panel-content-wrap-open ui-panel-content-wrap-closed');*/
+		$('span.ui-icon-bars').trigger('click');
+		
+		
 		$('div#headerDiv').find('h1').html("PlayList");
 		$('div#headerDiv').find('h1').attr("data-playlist-name", "");
 		
@@ -139,6 +145,13 @@ $(document).on('pageinit', '[data-role="page"]', function() {
 		$videoContainer.listview("refresh");
 		// refresh the control group div
 		$("#demo-page").trigger("create");
+		
+		// to close the menu as soon as some one clicks on any item
+		/*$('div#left-panel').toggleClass("ui-panel-open ui-panel-closed");
+		$('div#headerDiv').toggleClass("ui-panel-content-fixed-toolbar-position-left ui-panel-content-fixed-toolbar-display-reveal ui-panel-content-fixed-toolbar-open ui-panel-content-fixed-toolbar-closed");
+		$('div#contentVideosId').parent().toggleClass('ui-panel-content-wrap-open ui-panel-content-wrap-closed');*/
+		$('span.ui-icon-bars').trigger('click');
+		
 		$('div#headerDiv').find('h1').html("My PlayList");
 		$('div#headerDiv').find('h1').attr("data-playlist-name", "myPlayList");
 	});
@@ -161,6 +174,13 @@ $(document).on('pageinit', '[data-role="page"]', function() {
 		$videoContainer.listview("refresh");
 		// refresh the control group div
 		$("#demo-page").trigger("create");
+		
+		// to close the menu as soon as some one clicks on any item
+		/*$('div#left-panel').toggleClass("ui-panel-open ui-panel-closed");
+		$('div#headerDiv').toggleClass("ui-panel-content-fixed-toolbar-position-left ui-panel-content-fixed-toolbar-display-reveal ui-panel-content-fixed-toolbar-open ui-panel-content-fixed-toolbar-closed");
+		$('div#contentVideosId').parent().toggleClass('ui-panel-content-wrap-open ui-panel-content-wrap-closed');*/
+		$('span.ui-icon-bars').trigger('click');
+		
 		$('div#headerDiv').find('h1').html("Favourites");
 		$('div#headerDiv').find('h1').attr("data-playlist-name", "favouritePlayList");
 	});
@@ -260,6 +280,8 @@ $(document).on('pageinit', '[data-role="page"]', function() {
 		var iFrameEle = $('div#contentVideosId').find('div.video-container-div').find('iframe');
 		iFrameEle.attr('src', 'http://www.youtube.com/embed/'+videoId);
 		// iframeDiv.append(iFrameEle);
+		// go to top and focus on video
+		$("html, body").animate({ scrollTop: 0 },500);
 		return;
 	});
 	
