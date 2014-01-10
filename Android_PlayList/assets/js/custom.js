@@ -18,6 +18,10 @@
 // Global Variables
 
 var $videoContainer;
+
+var videoplayer = {};
+
+
 /*videojs.options.flash.swf = "video-js.swf";*/
 
 /*$(document).bind('mobileinit', function() {
@@ -34,6 +38,7 @@ $(document).on('pageinit', '[data-role="page"]', function() {
 	populatePlayListMenu();
 	populatefavouritePlayListMenu(localStorage.getObj('favouritePlayList'));
 	populateMyPlayListMenu(localStorage.getObj('myPlayList'));
+	videoplayer.maxItems = 10;
 	
 	// Video PlayList 
 	$('ul#playListUl').on('click', 'li', function(evt) {
@@ -59,12 +64,12 @@ $(document).on('pageinit', '[data-role="page"]', function() {
 		$videoContainer.html("");
 		
 		// first check if the li elements list in localstorage, if yes pull it from there.
-		var liElementList = localStorage.getObj($.trim($li.attr("data-vmapp-val")));
+		//var liElementList = localStorage.getObj($.trim($li.attr("data-vmapp-val")));
 		
 		var myPlayList = localStorage.getObj('myPlayList');
 		var favouritePlayList = localStorage.getObj('favouritePlayList');
 		
-		if (liElementList) {
+		/*if (liElementList) {
 			$videoContainer.html(liElementList);
 			var liElementList = $videoContainer.find('li');
 			_.each(liElementList, function(element, index, list) {
@@ -81,9 +86,22 @@ $(document).on('pageinit', '[data-role="page"]', function() {
 				}
 			});
 			//$.mobile.loading('hide');
-		} else {
+		} else {*/
 			var videoListMap = localStorage.getObj('videoListService');
-			var videoIdListVal = videoListMap[$.trim($li.attr("data-vmapp-val"))].videoIdList;
+			var category = $.trim($li.attr("data-vmapp-val"));
+			var videoIdListVal = videoListMap[category].videoIdList;
+			
+			// set active category = which ever is clicked
+			videoplayer.activeCategory = category;
+			
+			// load only first videoplayer.maxItems
+			var videoListSubSet = _.first(videoIdListVal, videoplayer.maxItems);
+			// set the rest of the videoList for that category
+			videoplayer.category = _.rest(videoIdListVal, videoplayer.maxItems);
+			// set global object into localstorage
+			localStorage.setObj('videoPlayer', videoplayer);
+			
+			console.log(" loading only "+videoListSubSet.length+" elements");
 			/*
 			 * <li>
 			 * 		<img>
@@ -99,11 +117,11 @@ $(document).on('pageinit', '[data-role="page"]', function() {
 			 * */
 			var videoIdBasedMap = localStorage.getObj("videoIdBasedMap");
 			
-			$videoContainer = populateVideoContents(videoIdListVal, videoIdBasedMap, null, favouritePlayList, myPlayList);			
+			$videoContainer = populateVideoContents(videoListSubSet, videoIdBasedMap, null, favouritePlayList, myPlayList);			
 			// store the li list in localstorage
-			localStorage.setObj($.trim($li.attr("data-vmapp-val")), $videoContainer.html());
+		//	localStorage.setObj($.trim($li.attr("data-vmapp-val")), $videoContainer.html());
 		//	$.mobile.loading('hide');
-		}
+	//	}
 		// console.log("video UL :: "+$videoContent.html());
 		// refresh the UL
 		$videoContainer.prepend("<li data-role='list-divider' data-theme='a'>Video(s)</li>");
@@ -281,8 +299,40 @@ $(document).on('pageinit', '[data-role="page"]', function() {
 		iFrameEle.attr('src', 'http://www.youtube.com/embed/'+videoId);
 		// iframeDiv.append(iFrameEle);
 		// go to top and focus on video
-		$("html, body").animate({ scrollTop: 0 },500);
+		$.mobile.silentScroll(0)
+		//$("html, body").animate({ scrollTop: 0 },500);
 		return;
+	});
+	
+	$(window).scroll(function(){
+	    if($(document).height() > $(window).height()) {
+	    	if($(window).scrollTop() == $(document).height() - $(window).height()) {
+	    		console.log("The Bottom");
+	    		// get the active catagorie
+	    		// get the map 
+	    		// get the video list
+	    		// get only selected elements and populate list
+	    		// set active category = which ever is clicked
+	    		videoplayer = localStorage.getObj('videoPlayer');
+	    		var category = videoplayer.activeCategory;
+	    		var videoListSubSet = _.first(videoplayer.category, videoplayer.maxItems);
+	    		videoplayer.category = _.rest(videoplayer.category, videoplayer.maxItems);
+	    		// set global object into localstorage
+	    		localStorage.setObj('videoPlayer', videoplayer);
+
+	    		if (videoListSubSet) {
+	    			var myPlayList = localStorage.getObj('myPlayList');
+		    		var favouritePlayList = localStorage.getObj('favouritePlayList');
+		    		var videoIdBasedMap = localStorage.getObj("videoIdBasedMap");
+		    		if ($videoContainer) {
+		    			$videoContainer = populateVideoContents(videoListSubSet, videoIdBasedMap, null, favouritePlayList, myPlayList);
+		    			$videoContainer.listview("refresh");
+		    		}
+	    			// refresh the control group div
+	    			$("#demo-page").trigger("create");
+	    		}
+	    	}
+	    }
 	});
 	
 });
@@ -496,14 +546,9 @@ function populateMyPlayListMenu(myPlayList) {
 // Will get called after Ajax call
 function buildVideoListDS(videosJsonData) {
 
-   
-  //   alert("I am here");
     var videoListMap = {};
-    //var videoDetails = {};
-   //  var videoIdList = [];
-    //var html = "<ul id='ulList'></ul>";
-    //$('div#content').append('<BR><BR><div id="dataDiv"></div>').append(html);
     var videoIdBasedMap = {};
+    
     // create 2 DS one for LHS menu and one for showing actual contents
     $.each(videosJsonData, function (i, videoMap) {
         var categories = videoMap.aliases;
