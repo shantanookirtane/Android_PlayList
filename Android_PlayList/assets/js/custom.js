@@ -93,37 +93,24 @@ $(document).on('pageinit', '[data-role="page"]', function() {
 			
 			// set active category = which ever is clicked
 			videoplayer.activeCategory = category;
-			
-			// load only first videoplayer.maxItems
-			var videoListSubSet = _.first(videoIdListVal, videoplayer.maxItems);
-			// set the rest of the videoList for that category
-			videoplayer.category = _.rest(videoIdListVal, videoplayer.maxItems);
-			// set global object into localstorage
-			localStorage.setObj('videoPlayer', videoplayer);
-			
-			console.log(" loading only "+videoListSubSet.length+" elements");
-			/*
-			 * <li>
-			 * 		<img>
-			 * 		<div1><info>
-			 * 		<div2><a>
-			 * </li>
-			 * "avg_rating": " 3.21",
-	          "likes": " 480",
-	          "dislikes": " 389",
-	          "total_views": "348531",
-	          "title": "Go Diego Go! English Episode for Children - 2013 (Dora the Explorer Friend)",
-	          "thumbnail": "http://i.ytimg.com/vi/9-4ki20O6DI/default.jpg"
-			 * */
-			var videoIdBasedMap = localStorage.getObj("videoIdBasedMap");
-			
-			$videoContainer = populateVideoContents(videoListSubSet, videoIdBasedMap, null, favouritePlayList, myPlayList);			
-			// store the li list in localstorage
-		//	localStorage.setObj($.trim($li.attr("data-vmapp-val")), $videoContainer.html());
-		//	$.mobile.loading('hide');
-	//	}
-		// console.log("video UL :: "+$videoContent.html());
-		// refresh the UL
+			var videoListSubSet;
+			if (videoIdListVal.length > videoplayer.maxItems) {
+				// load only first videoplayer.maxItems
+				videoListSubSet = _.first(videoIdListVal, videoplayer.maxItems);
+				// set the rest of the videoList for that category
+				videoplayer.category = _.rest(videoIdListVal, videoplayer.maxItems);
+				// set global object into localstorage
+				localStorage.setObj('videoPlayer', videoplayer);	
+				console.log(" loading only "+videoListSubSet.length+" elements");
+				var videoIdBasedMap = localStorage.getObj("videoIdBasedMap");
+				$videoContainer = populateVideoContents(videoListSubSet, videoIdBasedMap, null, favouritePlayList, myPlayList);
+				$videoContainer.append("<li class='load-more-data'><a href='#'>Load More Videos</a></li>");
+			} else {
+				console.log(" Not dividing the list ");
+				var videoIdBasedMap = localStorage.getObj("videoIdBasedMap");
+				$videoContainer = populateVideoContents(videoIdListVal, videoIdBasedMap, null, favouritePlayList, myPlayList);
+			}
+
 		$videoContainer.prepend("<li data-role='list-divider' data-theme='a'>Video(s)</li>");
 		$videoContainer.listview("refresh");
 		
@@ -153,12 +140,33 @@ $(document).on('pageinit', '[data-role="page"]', function() {
 		// refresh the list
 		var myPlayList = localStorage.getObj('myPlayList');
 		$videoContainer = $("ul#video-list");
-		var videoIdBasedMap = localStorage.getObj("videoIdBasedMap");
+		// var videoIdBasedMap = localStorage.getObj("videoIdBasedMap");
 		$videoContainer.html("");
 		
 		var favouritePlayList = localStorage.getObj('favouritePlayList');
 		
-		$videoContainer = populateVideoContents(myPlayList, videoIdBasedMap, "myPlayList", favouritePlayList);
+		// set active category = which ever is clicked
+		videoplayer.activeCategory = "myPlayList";
+		var videoListSubSet;
+		if (myPlayList.length > videoplayer.maxItems) {
+			// load only first videoplayer.maxItems
+			videoListSubSet = _.first(myPlayList, videoplayer.maxItems);
+			// set the rest of the videoList for that category
+			videoplayer.category = _.rest(myPlayList, videoplayer.maxItems);
+			// set global object into localstorage
+			localStorage.setObj('videoPlayer', videoplayer);	
+			console.log(" loading only "+videoListSubSet.length+" elements");
+			var videoIdBasedMap = localStorage.getObj("videoIdBasedMap");
+			//$videoContainer = populateVideoContents(videoListSubSet, videoIdBasedMap, null, favouritePlayList, myPlayList);
+			$videoContainer = populateVideoContents(myPlayList, videoIdBasedMap, "myPlayList", favouritePlayList);
+			$videoContainer.append("<li class='load-more-data'>Load More Videos</li>");
+		} else {
+			console.log(" Not dividing the list ");
+			var videoIdBasedMap = localStorage.getObj("videoIdBasedMap");
+			// $videoContainer = populateVideoContents(videoIdListVal, videoIdBasedMap, null, favouritePlayList, myPlayList);
+			$videoContainer = populateVideoContents(myPlayList, videoIdBasedMap, "myPlayList", favouritePlayList);
+		}
+		//$videoContainer = populateVideoContents(myPlayList, videoIdBasedMap, "myPlayList", favouritePlayList);
 		$videoContainer.prepend("<li data-role='list-divider' data-theme='a'>Video(s)</li>");
 		$videoContainer.listview("refresh");
 		// refresh the control group div
@@ -187,7 +195,29 @@ $(document).on('pageinit', '[data-role="page"]', function() {
 		
 		var myPlayList = localStorage.getObj('myPlayList');
 		
-		$videoContainer = populateVideoContents(favouritePlayList, videoIdBasedMap, "favouritePlayList", null, myPlayList);
+		// set active category = which ever is clicked
+		videoplayer.activeCategory = "favouritePlayList";
+		var videoListSubSet;
+		if (favouritePlayList.length > videoplayer.maxItems) {
+			// load only first videoplayer.maxItems
+			videoListSubSet = _.first(favouritePlayList, videoplayer.maxItems);
+			// set the rest of the videoList for that category
+			videoplayer.category = _.rest(favouritePlayList, videoplayer.maxItems);
+			// set global object into localstorage
+			localStorage.setObj('videoPlayer', videoplayer);	
+			console.log(" loading only "+videoListSubSet.length+" elements");
+			var videoIdBasedMap = localStorage.getObj("videoIdBasedMap");
+			//$videoContainer = populateVideoContents(videoListSubSet, videoIdBasedMap, null, favouritePlayList, myPlayList);
+			//$videoContainer = populateVideoContents(myPlayList, videoIdBasedMap, "myPlayList", favouritePlayList);
+			$videoContainer = populateVideoContents(favouritePlayList, videoIdBasedMap, "favouritePlayList", null, myPlayList);
+			$videoContainer.append("<li class='load-more-data'>Load More Videos</li>");
+		} else {
+			console.log(" Not dividing the list ");
+			var videoIdBasedMap = localStorage.getObj("videoIdBasedMap");
+			// $videoContainer = populateVideoContents(videoIdListVal, videoIdBasedMap, null, favouritePlayList, myPlayList);
+			//$videoContainer = populateVideoContents(myPlayList, videoIdBasedMap, "myPlayList", favouritePlayList);
+			$videoContainer = populateVideoContents(favouritePlayList, videoIdBasedMap, "favouritePlayList", null, myPlayList);
+		}
 		$videoContainer.prepend("<li data-role='list-divider' data-theme='a'>Video(s)</li>");
 		$videoContainer.listview("refresh");
 		// refresh the control group div
@@ -292,7 +322,7 @@ $(document).on('pageinit', '[data-role="page"]', function() {
 	});
 	
 	
-	$('ul#video-list').on('click', 'li', function(evt) {
+	$('ul#video-list').on('click', 'li.videoLiEle', function(evt) {
 		$this = $(this);
 		var videoId = $this.attr('data-video-id');
 		var iFrameEle = $('div#contentVideosId').find('div.video-container-div').find('iframe');
@@ -304,7 +334,7 @@ $(document).on('pageinit', '[data-role="page"]', function() {
 		return;
 	});
 	
-	$(window).scroll(function(){
+/*	$(window).scroll(function(){
 	    if($(document).height() > $(window).height()) {
 	    	if($(window).scrollTop() == $(document).height() - $(window).height()) {
 	    		console.log("The Bottom");
@@ -333,6 +363,43 @@ $(document).on('pageinit', '[data-role="page"]', function() {
 	    		}
 	    	}
 	    }
+	});*/
+	
+	$loadMore = $('ul#video-list').children('.load-more-data');
+	
+	
+	$('ul#video-list').on('click', '.load-more-data', function(evt) {
+		console.log("Loading more data ");
+		evt.stopPropagation();
+		videoplayer = localStorage.getObj('videoPlayer');
+		var category = videoplayer.activeCategory;
+		var videoListSubSet = _.first(videoplayer.category, videoplayer.maxItems);
+		videoplayer.category = _.rest(videoplayer.category, videoplayer.maxItems);
+		// set global object into localstorage
+		localStorage.setObj('videoPlayer', videoplayer);
+
+		if (videoListSubSet) {
+			var myPlayList = localStorage.getObj('myPlayList');
+    		var favouritePlayList = localStorage.getObj('favouritePlayList');
+    		var videoIdBasedMap = localStorage.getObj("videoIdBasedMap");
+    		if ($videoContainer) {
+    			if (category === "favouritePlayList") {
+    				$videoContainer = populateVideoContents(videoListSubSet, videoIdBasedMap, "favouritePlayList", null, myPlayList);
+    			} else if (category === "myPlayList") {
+    				$videoContainer = populateVideoContents(videoListSubSet, videoIdBasedMap, "myPlayList", favouritePlayList);
+    			} else {
+    				$videoContainer = populateVideoContents(videoListSubSet, videoIdBasedMap, null, favouritePlayList, myPlayList);	
+    			}
+    			$videoContainer.find('li.load-more-data').remove();
+    			if (videoplayer.category.length > 0) {
+    				$videoContainer.append("<li class='load-more-data'><a href='#'>Load More Videos</a></li>");
+    			}
+    			$videoContainer.listview("refresh");
+    			$("#demo-page").trigger("create");
+    		} else {
+    			
+    		}
+		}
 	});
 	
 });
@@ -374,9 +441,9 @@ function populateVideoContents(videoIdList, videoIdInfoMap, playListName, favour
 			videoList = videoIdList;
 		}
 		
-	_.each(videoIdList, function(element, index, list) {	
+	_.each(videoList, function(element, index, list) {	
 		var videoMap = videoIdInfoMap[element];
-		var $videoLi = $("<li>");
+		var $videoLi = $("<li class='videoLiEle'>");
 		var videoId = trim(videoMap.video_id);
 		$videoLi.attr('data-video-id', videoId);
 		/*var $videoEle = $("<video>");*/

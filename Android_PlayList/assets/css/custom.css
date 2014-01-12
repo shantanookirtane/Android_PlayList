@@ -125,5 +125,11 @@ a.plusAdded {
 	width: 100%;
 	height: 95%;
 }
+
+
+li.load-more-data a {
+	text-align: -webkit-center;
+}
+
  
  
