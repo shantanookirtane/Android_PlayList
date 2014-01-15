@@ -131,5 +131,38 @@ li.load-more-data a {
 	text-align: -webkit-center;
 }
 
+ul#video-list a {
+	font-family: fontawesome;
+}
+
+span.title {
+    color: #333333;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+span.title:hover img.thumbnail:hover {
+	color: #2793E6;
+	text-decoration:none;
+}
+
+.stat {
+color: #999999;
+font-size: 12px;
+display:block;
+line-height:2;
+}
+
+i.fa {
+
+color: #999999;
+font-size: 12px;
+	
+}
+
+/* div.infoDiv {
+	line-height: 2px;
+} */
  
  

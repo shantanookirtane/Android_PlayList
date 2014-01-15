@@ -329,10 +329,16 @@ $(document).on('pageinit', '[data-role="page"]', function() {
 		iFrameEle.attr('src', 'http://www.youtube.com/embed/'+videoId);
 		// iframeDiv.append(iFrameEle);
 		// go to top and focus on video
-		$.mobile.silentScroll(0)
+		//$.mobile.silentScroll(0)
 		//$("html, body").animate({ scrollTop: 0 },500);
 		return;
 	});
+	
+	$('ul#video-list').on('click', 'img.thumbnail', function(evt) {
+		console.log("click on image");
+		$.mobile.silentScroll(0);	
+	});
+	
 	
 /*	$(window).scroll(function(){
 	    if($(document).height() > $(window).height()) {
@@ -459,13 +465,20 @@ function populateVideoContents(videoIdList, videoIdInfoMap, playListName, favour
 		$videoEle.attr('height', "264");
 		$videoEle.attr('poster', trim(videoMap.thumbnail));
 		$videoEle.attr('class', "video-js vjs-default-skin vjs-big-play-centered");*/
-		var $videoImg = $("<img>");
-		var $infoDiv = $("<div data-role='controlgroup' data-type='vertical'>");
+		var $videoImg = $("<img class='thumbnail'>");
+		var $infoDiv = $("<div data-role='controlgroup' data-type='vertical' class='infoDiv'>");
 		var $buttonDiv = $("<div data-role='controlgroup' data-type='horizontal'>");
-		var $buttonAnchor = $("<a href='#' data-role='button' data-icon='plus' data-iconpos='notext' data-inline='true' class='addButton' title='Add to my playlist'>");
-		var $buttonAnchor1 = $("<a href='#' data-role='button' data-icon='star' data-iconpos='notext' data-inline='true' class='starButton' title='Add to Favourite'>");
-		var $buttonDelete = $("<a href='#' data-role='button' data-icon='delete' data-iconpos='notext' data-inline='true' class='deleteButton'>");
-		
+		var $buttonAnchor = $("<a href='' data-role='button' data-icon='plus' data-iconpos='notext' data-inline='true' class='addButton' title='Add to my playlist'>");
+		var $buttonAnchor1 = $("<a href='' data-role='button' data-icon='star' data-iconpos='notext' data-inline='true' class='starButton' title='Add to Favourite'>");
+		var $buttonDelete = $("<a href='' data-role='button' data-icon='delete' data-iconpos='notext' data-inline='true' class='deleteButton'>");
+		var likeIcon = '<i class="fa fa-thumbs-o-up fa-lg">'+getFormatedDigits(trim(videoMap.likes))+'</i>';
+		var disLikesIcon = '<i class="fa fa-thumbs-o-down fa-lg">'+getFormatedDigits(trim(videoMap.dislikes))+'</i>';
+		//var avgRating = '<span class="stat">+Avg Rating:'+trim(videoMap.avg_rating)+'</i>';
+		//var viewsIcon = '<i class="fa fa-thumbs-o-up fa-lg">Likes</i>';
+		var $titleSpan = $('<span class="title">');
+		var $statSpan = $('<span class="stat">');
+		var $ratingSpan = $('<span class="stat">');
+		var $likeDislikeSpan = $('<span class="stat">');
 		// If its normal playlist then do this
 		if (!playListName) {
 			// if the element is in favourite playlist then select it
@@ -510,9 +523,15 @@ function populateVideoContents(videoIdList, videoIdInfoMap, playListName, favour
 			$buttonDiv.append($buttonDelete);
 		}
 		
-		var infoStr = "Title: "+trim(videoMap.title)+"<BR>"+"Total Views: "+trim(videoMap.total_views)+"<BR>"+"Likes: "+trim(videoMap.likes)+" DisLikes: "+trim(videoMap.dislikes);
-		infoStr += "<BR>"+"Avg Rating: "+trim(videoMap.avg_rating);
-		$infoDiv.html(infoStr);
+		$titleSpan.text(trim(videoMap.title));
+		$statSpan.text(getFormatedDigits(trim(videoMap.total_views))+" Views");
+		$likeDislikeSpan.html(likeIcon+disLikesIcon);
+		$ratingSpan.text("Avg Rating "+trim(videoMap.avg_rating));
+		//$likeDislikeSpan.append($ratingSpan);
+	//	var infoStr = "Title: "+trim(videoMap.title)+"<BR>"+"Total Views: "+trim(videoMap.total_views)+"<BR>"+"Likes: "+trim(videoMap.likes)+" DisLikes: "+trim(videoMap.dislikes);
+	//	infoStr += "<BR>"+"Avg Rating: "+trim(videoMap.avg_rating);
+		//$infoDiv.html(infoStr);
+		$infoDiv.append($titleSpan).append($statSpan).append($likeDislikeSpan).append($ratingSpan);
 		$videoImg.attr("src", trim(videoMap.thumbnail));
 		$videoLi.append($videoImg).append($infoDiv).append($buttonDiv);
 		$videoContainer.append($videoLi);
@@ -722,6 +741,12 @@ Storage.prototype.getObj = function(key) {
 function trim(str) {
 	return $.trim(str);
 }
+
+
+function getFormatedDigits(val) { 
+    return val.replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"); 
+}
+
 
 
 function resizeVideos() {
