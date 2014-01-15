@@ -235,7 +235,7 @@ $(document).on('pageinit', '[data-role="page"]', function() {
 	
 	$('ul#video-list').on('click', 'a.starButton', function(evt) {
 		$this = $(this);
-		evt.stopPropagation();
+	//	evt.stopPropagation();
 		//$this.toggleClass('starSelected');
 		var liElement = $this.closest('li');
 		var videoId = $(liElement).attr('data-video-id');
@@ -264,7 +264,7 @@ $(document).on('pageinit', '[data-role="page"]', function() {
 	
 	$('ul#video-list').on('click', 'a.addButton', function(evt) {
 		$this = $(this);
-		evt.stopPropagation();
+		//evt.stopPropagation();
 	//	$this.toggleClass('plusAdded');
 		var myPlayList = localStorage.getObj('myPlayList');
 		var liElement = $this.closest('li');
@@ -323,7 +323,7 @@ $(document).on('pageinit', '[data-role="page"]', function() {
 	
 	
 	$('ul#video-list').on('click', 'li.videoLiEle', function(evt) {
-		$this = $(this);
+/*		$this = $(this);
 		var videoId = $this.attr('data-video-id');
 		var iFrameEle = $('div#contentVideosId').find('div.video-container-div').find('iframe');
 		iFrameEle.attr('src', 'http://www.youtube.com/embed/'+videoId);
@@ -331,12 +331,18 @@ $(document).on('pageinit', '[data-role="page"]', function() {
 		// go to top and focus on video
 		//$.mobile.silentScroll(0)
 		//$("html, body").animate({ scrollTop: 0 },500);
-		return;
+		return;*/
 	});
 	
-	$('ul#video-list').on('click', 'img.thumbnail', function(evt) {
+	$('ul#video-list').on('click', 'img.thumbnail,span.title', function(evt) {
 		console.log("click on image");
-		$.mobile.silentScroll(0);	
+		$this = $(this);
+		var videoId = $this.closest('li.videoLiEle').attr('data-video-id');
+		var iFrameEle = $('div#contentVideosId').find('div.video-container-div').find('iframe');
+		iFrameEle.attr('src', 'http://www.youtube.com/embed/'+videoId);
+		// hide the list and show a single list
+		$.mobile.silentScroll(0);
+		return;
 	});
 	
 	
@@ -749,7 +755,7 @@ function getFormatedDigits(val) {
 
 
 
-function resizeVideos() {
+/*function resizeVideos() {
 // Find all YouTube videos
 var $allVideos = $("iframe"),
  
@@ -774,7 +780,7 @@ $(window).resize(function() {
   });
 // Kick off one resize to fix all videos on page load
 }).resize();
-}
+}*/
 
 
 

@@ -142,7 +142,7 @@ span.title {
     cursor: pointer;
 }
 
-span.title:hover img.thumbnail:hover {
+span.title:hover,img:hover {
 	color: #2793E6;
 	text-decoration:none;
 }
@@ -155,11 +155,21 @@ line-height:2;
 }
 
 i.fa {
-
 color: #999999;
 font-size: 12px;
-	
+margin-left: 6px;
 }
+
+ul#video-list li.hide {
+	display:none;
+}
+
+ul#video-list li.show {
+	display:block;
+}
+
+
+
 
 /* div.infoDiv {
 	line-height: 2px;
