@@ -112,6 +112,9 @@ $(document).on('pageinit', '[data-role="page"]', function() {
 			}
 
 		$videoContainer.prepend("<li data-role='list-divider' data-theme='a'>Video(s)</li>");
+		
+		$videoContainer.prepend("<li class='showVideoList hide'><a href='#'>Show Video List</a></li>");
+		
 		$videoContainer.listview("refresh");
 		
 		// refresh the control group div
@@ -168,6 +171,9 @@ $(document).on('pageinit', '[data-role="page"]', function() {
 		}
 		//$videoContainer = populateVideoContents(myPlayList, videoIdBasedMap, "myPlayList", favouritePlayList);
 		$videoContainer.prepend("<li data-role='list-divider' data-theme='a'>Video(s)</li>");
+		
+		$videoContainer.prepend("<li class='showVideoList hide'><a href='#'>Show Video List</a></li>");
+		
 		$videoContainer.listview("refresh");
 		// refresh the control group div
 		$("#demo-page").trigger("create");
@@ -219,6 +225,9 @@ $(document).on('pageinit', '[data-role="page"]', function() {
 			$videoContainer = populateVideoContents(favouritePlayList, videoIdBasedMap, "favouritePlayList", null, myPlayList);
 		}
 		$videoContainer.prepend("<li data-role='list-divider' data-theme='a'>Video(s)</li>");
+		
+		$videoContainer.prepend("<li class='showVideoList hide'><a href='#'>Show Video List</a></li>");
+		
 		$videoContainer.listview("refresh");
 		// refresh the control group div
 		$("#demo-page").trigger("create");
@@ -336,12 +345,23 @@ $(document).on('pageinit', '[data-role="page"]', function() {
 	
 	$('ul#video-list').on('click', 'img.thumbnail,span.title', function(evt) {
 		console.log("click on image");
-		$this = $(this);
+		var $this = $(this);
 		var videoId = $this.closest('li.videoLiEle').attr('data-video-id');
 		var iFrameEle = $('div#contentVideosId').find('div.video-container-div').find('iframe');
 		iFrameEle.attr('src', 'http://www.youtube.com/embed/'+videoId);
 		// hide the list and show a single list
+		$('ul#video-list').find('li').toggleClass('hide');
+	//	$('ul#video-list').append("<li class='showVideoList'><a href='#'>Show Video List</a></li>");
+		//$('ul#video-list').listview("refresh");
 		$.mobile.silentScroll(0);
+		return;
+	});
+	
+	$('ul#video-list').on('click', 'li.showVideoList', function(evt) {
+		console.log("showing video List ");
+		var $this = $(this);
+		$('ul#video-list').find('li').toggleClass('hide');
+		//$('ul#video-list').remove($this);
 		return;
 	});
 	
@@ -382,7 +402,14 @@ $(document).on('pageinit', '[data-role="page"]', function() {
 	
 	$('ul#video-list').on('click', '.load-more-data', function(evt) {
 		console.log("Loading more data ");
-		evt.stopPropagation();
+		// evt.stopPropagation();
+/*		var $this = $(this);
+		if ($this.find('a').hasClass('showList')) {
+			$('ul#video-list').find('li.videoLiEle.hide').toggleClass('hide');
+			$this.find('a').toggleClass('showList');
+			$this.find('a').text("Load More Videos");
+			return;
+		}*/
 		videoplayer = localStorage.getObj('videoPlayer');
 		var category = videoplayer.activeCategory;
 		var videoListSubSet = _.first(videoplayer.category, videoplayer.maxItems);

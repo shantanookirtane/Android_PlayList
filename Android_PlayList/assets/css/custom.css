@@ -127,7 +127,7 @@ a.plusAdded {
 }
 
 
-li.load-more-data a {
+li.load-more-data a, li.showVideoList a {
 	text-align: -webkit-center;
 }
 
