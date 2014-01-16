@@ -510,7 +510,7 @@ function populateVideoContents(videoIdList, videoIdInfoMap, playListName, favour
 		//var viewsIcon = '<i class="fa fa-thumbs-o-up fa-lg">Likes</i>';
 		var $titleSpan = $('<span class="title">');
 		var $statSpan = $('<span class="stat">');
-		var $ratingSpan = $('<span class="stat">');
+		var $ratingDiv = $('<div>');
 		var $likeDislikeSpan = $('<span class="stat">');
 		// If its normal playlist then do this
 		if (!playListName) {
@@ -559,12 +559,12 @@ function populateVideoContents(videoIdList, videoIdInfoMap, playListName, favour
 		$titleSpan.text(trim(videoMap.title));
 		$statSpan.text(getFormatedDigits(trim(videoMap.total_views))+" Views");
 		$likeDislikeSpan.html(likeIcon+disLikesIcon);
-		$ratingSpan.text("Avg Rating "+trim(videoMap.avg_rating));
+		$ratingDiv.raty({score: trim(videoMap.avg_rating)}) //.text("Avg Rating "+trim(videoMap.avg_rating));
 		//$likeDislikeSpan.append($ratingSpan);
 	//	var infoStr = "Title: "+trim(videoMap.title)+"<BR>"+"Total Views: "+trim(videoMap.total_views)+"<BR>"+"Likes: "+trim(videoMap.likes)+" DisLikes: "+trim(videoMap.dislikes);
 	//	infoStr += "<BR>"+"Avg Rating: "+trim(videoMap.avg_rating);
 		//$infoDiv.html(infoStr);
-		$infoDiv.append($titleSpan).append($statSpan).append($likeDislikeSpan).append($ratingSpan);
+		$infoDiv.append($titleSpan).append($statSpan).append($likeDislikeSpan).append($ratingDiv);
 		$videoImg.attr("src", trim(videoMap.thumbnail));
 		$videoLi.append($videoImg).append($infoDiv).append($buttonDiv);
 		$videoContainer.append($videoLi);

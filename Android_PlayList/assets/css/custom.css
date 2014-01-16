@@ -82,11 +82,13 @@ as the panel before opening the panel.
 
 
 a.starSelected {
-	background:#FFFF00 !important;
+	/* background:#FFFF00 !important; */
+	background:#999999 !important;
 }
 
 a.plusAdded {
-	background:#181256 !important;
+	/* background:#181256 !important; */
+	background:#999999 !important;
 } 
 
 /* Thanks to stackoverflow */
