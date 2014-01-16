@@ -482,7 +482,7 @@ function populateVideoContents(videoIdList, videoIdInfoMap, playListName, favour
 		
 	_.each(videoList, function(element, index, list) {	
 		var videoMap = videoIdInfoMap[element];
-		var $videoLi = $("<li class='videoLiEle'>");
+		var $videoLi = $("<li class='videoLiEle' data-theme='c'>");
 		var videoId = trim(videoMap.video_id);
 		$videoLi.attr('data-video-id', videoId);
 		/*var $videoEle = $("<video>");*/
