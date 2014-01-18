@@ -238,7 +238,7 @@ $(document).on('pageinit', '[data-role="page"]', function() {
 	
 	$('ul#video-list').on('click', 'a.deleteButton', function(evt) {
 		$this = $(this);
-		evt.stopPropagation();
+		// evt.stopPropagation();
 		var $liElement = $this.closest('li');
 		console.log("delete button clicked ::");
 		var playListName = $('div#headerDiv').find('h1').attr("data-playlist-name");
