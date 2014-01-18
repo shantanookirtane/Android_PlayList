@@ -21,9 +21,23 @@ var $videoContainer;
 
 var videoplayer = {};
 
+$(document).on('pagebeforecreate', '[data-role="page"]', function() {
+	console.log("pagebeforecreate event");
+	showLoader();
+	if (!localStorage.getObj('videoListService')) {
+		console.log(" Not found in local storage :: calling build JSON function :: ");
+		videoListMap = buildVideoListDS(videosJsonData);
+		localStorage.setObj('videoListService', videoListMap);
+		console.log(" Setting object in localstorage :: ");
+	}
+});
+
+
+
 
 $(document).on('pageinit', '[data-role="page"]', function() {
-	
+	console.log("page init event ");
+	hideLoader();
 	populatePlayListMenu();
 	populatefavouritePlayListMenu(localStorage.getObj('favouritePlayList'));
 	populateMyPlayListMenu(localStorage.getObj('myPlayList'));
@@ -419,12 +433,12 @@ function populatePlayListMenu() {
 	
 	var videoListMap;
 	// Call another function to do the business logic on the result
-	if (!localStorage.getObj('videoListService')) {
+	/*if (!localStorage.getObj('videoListService')) {
 		console.log(" Not found in local storage :: calling build JSON function :: ");
 		videoListMap = buildVideoListDS(videosJsonData);
 		localStorage.setObj('videoListService', videoListMap);
 		console.log(" Setting object in localstorage :: ");
-	} 
+	}*/ 
 	// get it from localstorage
 	videoListMap = localStorage.getObj('videoListService');
 	// for objects to store in local storage you have to stringify
@@ -492,12 +506,12 @@ function populateMyPlayListMenu(myPlayList) {
 }
 
 
-// Will get called after Ajax call
+//Will get called after Ajax call
 function buildVideoListDS(videosJsonData) {
 
 	var videoListMap = {};
 	var videoIdBasedMap = {};
-
+	console.log(" jsondata :: length :: ",videosJsonData.length);
 	// create 2 DS one for LHS menu and one for showing actual contents
 	$.each(videosJsonData, function (i, videoMap) {
 		var categories = videoMap.aliases;
@@ -527,6 +541,8 @@ function buildVideoListDS(videosJsonData) {
 	localStorage.setObj("videoIdBasedMap", videoIdBasedMap);
 	return videoListMap;
 }
+
+
 
 Storage.prototype.setObj = function(key, obj) {
     return this.setItem(key, JSON.stringify(obj));
