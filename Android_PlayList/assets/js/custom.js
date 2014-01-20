@@ -23,7 +23,7 @@ var videoplayer = {};
 
 $(document).on('pagebeforecreate', '[data-role="page"]', function() {
 	console.log("pagebeforecreate event");
-	showLoader();
+	// showLoader();
 	if (!localStorage.getObj('videoListService')) {
 		console.log(" Not found in local storage :: calling build JSON function :: ");
 		videoListMap = buildVideoListDS(videosJsonData);
@@ -37,7 +37,7 @@ $(document).on('pagebeforecreate', '[data-role="page"]', function() {
 
 $(document).on('pageinit', '[data-role="page"]', function() {
 	console.log("page init event ");
-	hideLoader();
+	// hideLoader();
 	populatePlayListMenu();
 	populatefavouritePlayListMenu(localStorage.getObj('favouritePlayList'));
 	populateMyPlayListMenu(localStorage.getObj('myPlayList'));
@@ -94,7 +94,7 @@ $(document).on('pageinit', '[data-role="page"]', function() {
 	});
 	
 	// My PlayList
-	$('ul#myPlayListUl').on('click', 'li', function(evt){
+	$('ul#myPlayListUl').on('click', 'li', function(evt) {
 		// alert("li item clicked");
 		// get the videos from localStorage
 		// populate them in Li
@@ -125,9 +125,13 @@ $(document).on('pageinit', '[data-role="page"]', function() {
 			var videoIdBasedMap = localStorage.getObj("videoIdBasedMap");
 			$videoContainer = populateVideoContents(myPlayList, videoIdBasedMap, "myPlayList", favouritePlayList);
 		}
-		$videoContainer.prepend("<li data-role='list-divider' data-theme='a'>Video(s)</li>");
 		
+		
+		$videoContainer.prepend("<li data-role='list-divider' data-theme='a'>Video(s)</li>");
 		$videoContainer.prepend("<li class='showVideoList hide'><a href='#'>Show Video List</a></li>");
+		
+		// add button for play all videos
+		$videoContainer.prepend('<button data-theme="c" class="playAllVideos">Play All</button>');
 		
 		$videoContainer.listview("refresh");
 		// refresh the control group div
@@ -183,6 +187,28 @@ $(document).on('pageinit', '[data-role="page"]', function() {
 		$('div#headerDiv').find('h1').html("Favourites");
 		$('div#headerDiv').find('h1').attr("data-playlist-name", "favouritePlayList");
 	});
+	
+	$('ul#video-list').on('click', 'button.playAllVideos', function(evt) {
+		var $self = $(this);
+		console.log("Playing all videos")
+		var myPlayList = localStorage.getObj('myPlayList');
+		var firstV = _.first(myPlayList);
+		var playList = "";
+		_.each(_.rest(myPlayList, 1), function (videoId, i, list) {
+			if(playList == "") {
+				playList += videoId;
+			} else {
+				playList += ","+videoId;
+			}
+		});
+		var iFrameEle = $('div#contentVideosId').find('div.video-container-div').find('iframe');
+		iFrameEle.attr('src', 'http://www.youtube.com/embed/'+firstV+'?playlist='+playList);
+		$self.prop("value", "Playing All");
+		// $self.attr('disabled', true);
+		//$('iframe').attr('src','http://www.youtube.com/embed/3PADxcM_Vi8?playlist=FbgsaVD-6u0,QyPRTblP2-4,OyiNc7zNN9c')
+		
+	});
+	
 	
 	$('ul#video-list').on('click', 'a.starButton', function(evt) {
 		$this = $(this);
