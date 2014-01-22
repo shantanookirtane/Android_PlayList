@@ -15,10 +15,41 @@
 	        <link rel="stylesheet" href="css/custom.css">	
 	</head>  
 	<body>
-		<div data-url="demo-page" data-role="page" id="demo-page" data-theme="d">
+		<div data-url="welcome-page" data-role="page" class="welcome-page-container">
+			<div data-role="header" id="welcome-page-header" data-position="fixed" data-theme="b">
+		        <h1>Welcome</h1>
+		    </div>
+			<div data-role="content" class="welcome-page">
+				<span class="welcome-dscr">
+					Welcome to the Video Playlist App. Following are some features of this App.
+					<BR>
+					<BR>
+					1. This app has a collection of videos from different categories suitable for kids.
+					<BR>
+					2. You can create your own playlist.
+					<BR>
+					3. You can play all videos from your playlist at once.
+					<BR>
+					4. You can add videos to Favourite.
+					<BR>
+					<BR>
+					We hope that you will really enjoy this app. Please do not forget to share your feedback.
+					<BR> 
+					You can Like us on Facebook also.
+				</span>
+			</div>
+			<div class="welcome-page-button">
+					<button id="app-fb-like" data-theme="b" class="ui-btn ui-btn-inline ui-corner-all ui-btn-b">Like Us</button>
+					<button id="app-feedback" data-theme="b" class="ui-btn ui-btn-inline ui-corner-all ui-btn-b">Feedback</button>
+					<button id="more-apps" data-theme="b" class="ui-btn ui-btn-inline ui-corner-all ui-btn-b">More Apps</button>
+					<button id="show-video-playlist-app" data-theme="b" class="ui-btn ui-btn-inline ui-shadow ui-corner-all ui-btn-b">Go to App</button>
+			</div>
+		</div>
+		<div data-url="demo-page" data-role="page" id="demo-page" data-theme="d" class="hide">
 		    <div data-role="header" id="headerDiv" data-position="fixed" data-theme="b">
 		        <h1>Videos</h1>
-		        <a href="#left-panel" data-icon="bars" data-iconpos="notext" data-shadow="false" data-iconshadow="false">Menu</a>
+		        <a href="#left-panel" data-icon="bars" data-iconpos="notext" data-shadow="false" data-iconshadow="false"></a>
+		        <a href="" class="welcome-page-icon" data-icon="home" data-position="right" data-iconpos="notext" data-shadow="false" data-iconshadow="false"></a>
 		    </div><!-- /header -->
 		    <!-- Following Div will be used to add the video lists -->
 		    <div data-role="content" id="contentVideosId" class="contentVideosClass">
@@ -70,7 +101,7 @@
 	        <script src="js/plugin/underscore-min.js"></script>
 	        <!-- <script src="js/plugin/video.js"></script> -->
 	        <!-- <script src="js/plugin/vjs.youtube.js"></script>  -->
-	        <script src="js/videos_test.jsonp" type="text/javascript"></script>
+	        <script src="js/videos.jsonp" type="text/javascript"></script>
 	        <script src="js/custom.js"></script>
 		
 	</body>

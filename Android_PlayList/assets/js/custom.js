@@ -21,7 +21,19 @@ var $videoContainer;
 
 var videoplayer = {};
 
-$(document).on('pagebeforecreate', '[data-role="page"]', function() {
+
+
+
+$(document).on('pageinit', '[data-url="welcome-page"]', function() {
+	console.log("pageinit : welcome -page");
+	$("button#show-video-playlist-app").on("click", function (evt) {
+		$.mobile.changePage( $("div[data-url='demo-page']"), "slide", true, true);
+		return;
+	});
+
+});
+
+$(document).on('pagebeforecreate', '[data-url="demo-page"]', function() {
 	console.log("pagebeforecreate event");
 	// showLoader();
 	if (!localStorage.getObj('videoListService')) {
@@ -35,13 +47,19 @@ $(document).on('pagebeforecreate', '[data-role="page"]', function() {
 
 
 
-$(document).on('pageinit', '[data-role="page"]', function() {
+$(document).on('pageinit', '[data-url="demo-page"]', function() {
 	console.log("page init event ");
 	// hideLoader();
 	populatePlayListMenu();
 	populatefavouritePlayListMenu(localStorage.getObj('favouritePlayList'));
 	populateMyPlayListMenu(localStorage.getObj('myPlayList'));
 	videoplayer.maxItems = 10;
+	
+	$("a.welcome-page-icon").on("click", function (evt) {
+		$.mobile.changePage( $("div[data-url='welcome-page']"), "slide", true, true);
+		return;
+	});
+	
 	
 	// Video PlayList 
 	$('ul#playListUl').on('click', 'li', function(evt) {
