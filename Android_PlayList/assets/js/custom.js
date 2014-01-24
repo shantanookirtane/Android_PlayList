@@ -22,9 +22,17 @@ var $videoContainer;
 var videoplayer = {};
 
 
-
-
 $(document).on('pageinit', '[data-url="welcome-page"]', function() {
+	try{
+	    //we replace default localStorage with our Android Database one
+	    window.localStorage=LocalStorage;    
+	}catch(e){
+	    //LocalStorage class was not found. be sure to add it to the webview
+			console.log("error", e);
+	        console.log("LocalStorage ERROR : can't find android class LocalStorage. switching to raw localStorage")              
+	   }
+
+
 	console.log("pageinit : welcome -page");
 	$("button#show-video-playlist-app").on("click", function (evt) {
 		$.mobile.changePage( $("div[data-url='demo-page']"), "slide", true, true);
