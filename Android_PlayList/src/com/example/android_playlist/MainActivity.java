@@ -19,9 +19,6 @@ public class MainActivity extends Activity {
         // setContentView(R.layout.activity_main);
         WebView webView = new WebView(this);
         
-        //add the JavaScriptInterface so that JavaScript is able to use LocalStorageJavaScriptInterface's methods when calling "LocalStorage"
-        webView.addJavascriptInterface(new LocalStorageJavaScriptInterface(this), "LocalStorage");
-         
         WebSettings settings = webView.getSettings();
         // TO enable JS
         settings.setJavaScriptEnabled(true);
@@ -30,6 +27,11 @@ public class MainActivity extends Activity {
         
         //those two lines seem necessary to keep data that were stored even if the app was killed.
         settings.setDatabaseEnabled(true);
+        
+        //add the JavaScriptInterface so that JavaScript is able to use LocalStorageJavaScriptInterface's methods when calling "LocalStorage"
+        webView.addJavascriptInterface(new LocalStorageJavaScriptInterface(this), "LocalStorage");
+         
+
      /*   
         webView.setWebChromeClient(new WebChromeClient() { 
             public void onExceededDatabaseQuota(String url, String databaseIdentifier, long currentQuota, long estimatedSize, long totalUsedQuota, WebStorage.QuotaUpdater quotaUpdater) { 
