@@ -44,6 +44,7 @@ public class LocalStorage extends SQLiteOpenHelper {
          */
         public static LocalStorage getInstance(Context ctx) {
                 if (mInstance == null) {
+                	Log.d("LocalStorage :: ", "Context Created");
                         mInstance = new LocalStorage(ctx.getApplicationContext());
                 }
                 return mInstance;
@@ -56,6 +57,7 @@ public class LocalStorage extends SQLiteOpenHelper {
 
         @Override
         public void onCreate(SQLiteDatabase db) {
+        	Log.d("LocalStorage :: ", "Database Created");
                 db.execSQL(DICTIONARY_TABLE_CREATE);
         }
 
