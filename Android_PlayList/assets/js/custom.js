@@ -493,8 +493,25 @@ function populatePlayListMenu() {
 	// for objects to store in local storage you have to stringify
 	// refer http://stackoverflow.com/questions/2010892/storing-objects-in-html5-localstorage
 	var $playListUl = $('ul#playListUl');
+	var videoIdBasedMap = localStorage.getObj("videoIdBasedMap");
 	$.each(videoListMap, function (key, value) {
-		$playListUl.append('<li class="liElement" data-vmapp-val="'+key+'"><a href="#">' + key + '(' + value.occurance + ')</a></li>'); 
+		var imgEle = $("<img width='80px' height='60px'>");
+		var anchore = $("<a href='#'>");
+		var liEle = $("<li>");
+		var videoId = value.videoIdList[(value.videoIdList.length) - 1];
+		
+		liEle.attr("data-vmapp-val", key);
+		liEle.attr("class", "liElement");
+		
+		imgEle.attr("src", trim(videoIdBasedMap[videoId].thumbnail));
+		
+		anchore.text(key+" ("+value.occurance+")");
+		
+		liEle.append(imgEle);
+		liEle.append(anchore);
+		$playListUl.append(liEle);
+		
+		// $playListUl.append('<li class="liElement" data-vmapp-val="'+key+'"><a href="#">' + key + '(' + value.occurance + ')</a></li>'); 
 	});
 	// Always call this to set the design to added elements
 	$playListUl.listview("refresh");
