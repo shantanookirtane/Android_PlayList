@@ -90,6 +90,11 @@ ul#video-list a {
 	font-family: fontawesome;
 }
 
+div#demo-page {
+	font-family: fontawesome;
+}
+
+
 span.title {
     color: #333333;
     font-size: 14px;
@@ -102,14 +107,14 @@ span.title:hover, img:hover {
 	text-decoration:none;
 }
 
-.stat {
+span.stat {
 color: #999999;
 font-size: 12px;
 display:block;
 line-height:2;
 }
 
-i.fa {
+span.stat i.fa {
 color: #999999;
 font-size: 12px;
 margin-left: 6px;
@@ -117,4 +122,22 @@ margin-left: 6px;
 
 div#lhsMenuDiv {
 	margin-top: -15px;
+}
+
+div#headerDiv div.lhsMenu {
+	left: 10px;
+	margin-top: -36px;
+	vertical-align: middle;
+	position: absolute;
+	z-index: 10;
+	cursor:pointer;
+}
+
+div#headerDiv div.rhsHomeMenu {
+	right:10px;
+	margin-top: -36px;
+	vertical-align: middle;
+	z-index: 10;
+	position: absolute;
+	cursor:pointer;
 }

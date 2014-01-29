@@ -1,17 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
 <html>
 	<head>
-			
-	        <title>MobileVPlayList</title>
-	        <meta charset="utf-8">
-  			<meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
-	        <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
-	        <!-- <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; minimum-scale=1.0; user-scalable=no; target-densityDpi=device-dpi"/> -->
-	        
-	        <!-- CSS -->
-	        <link rel="stylesheet" href="css/plugin/normalize.css">
-	        <link rel="stylesheet" href="css/plugin/jquery.mobile-1.3.2.css">
-	        <link rel="stylesheet" href="css/plugin/font-awesome.css">
-	        <link rel="stylesheet" href="css/custom.css">	
+        <meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
+ 		<meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+        <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+        <title>MobileVPlayList</title>        
+        <!-- CSS -->
+        <link rel="stylesheet" href="css/plugin/normalize.css">
+        <link rel="stylesheet" href="css/plugin/jquery.mobile-1.3.2.css">
+        <link rel="stylesheet" href="css/plugin/font-awesome.css">
+        <link rel="stylesheet" href="css/custom.css">	
 	</head>  
 	<body>
 		<div data-url="welcome-page" data-role="page" class="welcome-page-container">
@@ -47,8 +46,15 @@
 		<div data-url="demo-page" data-role="page" id="demo-page" data-theme="d" class="hide">
 		    <div data-role="header" id="headerDiv" data-position="fixed" data-theme="b">
 		        <h1>Videos</h1>
-		        <a href="#left-panel" data-icon="bars" data-iconpos="notext" data-shadow="false" data-iconshadow="false"></a>
-		        <a href="" class="welcome-page-icon" data-icon="home" data-position="right" data-iconpos="notext" data-shadow="false" data-iconshadow="false"></a>
+		       	<!-- <a href="#left-panel" data-icon="bars" data-iconpos="notext" data-shadow="false" data-iconshadow="false"></a> -->
+		       	 <div class="lhsMenu">
+		         <i class="fa fa-bars fa-2x"></i>
+		         </div>
+		         <div class="rhsHomeMenu">
+		         <i class="fa fa-home fa-2x"></i>	
+		         </div> 
+		         
+		        <!-- <a href="" class="welcome-page-icon" data-icon="home" data-position="right" data-iconpos="notext" data-shadow="false" data-iconshadow="false"></a> -->
 		    </div><!-- /header -->
 		    <!-- Following Div will be used to add the video lists -->
 		    <div data-role="content" id="contentVideosId" class="contentVideosClass">
@@ -89,19 +95,13 @@
             	</div> <!-- Collapisble-set end -->
 		    </div><!-- /panel -->
 		</div>
-		
 		<!-- Scripts -->
-	        <script src="js/plugin/jquery-1.9.0.min.js"></script>
-	        <script src="js/plugin/modernizr-2.7.1.min.js"></script>
-	        <script src="js/plugin/jquery.mobile-1.3.2.min.js"></script>
-	        <script src="js/plugin/jquery.raty.min.js"></script>
-	       <!--  <script src="js/plugin/jquery.jscrollpane.min.js"></script>
-	        <script src="js/plugin/jquery.mousewheel.js"></script> -->
-	        <script src="js/plugin/underscore-min.js"></script>
-	        <!-- <script src="js/plugin/video.js"></script> -->
-	        <!-- <script src="js/plugin/vjs.youtube.js"></script>  -->
-	        <script src="js/videos.jsonp" type="text/javascript"></script>
-	        <script src="js/custom.js"></script>
-		
+		<script src="js/plugin/modernizr-2.7.1.min.js"></script>
+        <script src="js/plugin/jquery-1.9.0.min.js"></script>
+        <script src="js/plugin/jquery.mobile-1.3.2.min.js"></script>
+        <script src="js/plugin/jquery.raty.min.js"></script>
+        <script src="js/plugin/underscore-min.js"></script>
+        <script src="js/videos.jsonp" type="text/javascript"></script>
+        <script src="js/custom.js"></script>
 	</body>
 </html>

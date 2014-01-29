@@ -63,10 +63,22 @@ $(document).on('pageinit', '[data-url="demo-page"]', function() {
 	populateMyPlayListMenu(getObj(localStorage.getItem('myPlayList')));
 	videoplayer.maxItems = 10;
 	
-	$("a.welcome-page-icon").on("click", function (evt) {
+	$("div.rhsHomeMenu").on("click", function (evt) {
 		$.mobile.changePage( $("div[data-url='welcome-page']"), "slide", true, true);
 		return;
 	});
+	
+	$("div.lhsMenu").on("click", function (evt) {
+		var $headerDiv = $("div#headerDiv");
+		var anchTag = $('<a href="#left-panel">');
+		if ($headerDiv.find("a").length === 0) {
+			$headerDiv.append(anchTag);	
+		}
+		$headerDiv.find("a").trigger("click");
+		$headerDiv.find("a").remove();
+		return;
+	});
+	
 	
 	
 	// Video PlayList 
@@ -113,7 +125,7 @@ $(document).on('pageinit', '[data-url="demo-page"]', function() {
 		// refresh the control group div
 		$("#demo-page").trigger("create");
 
-		$('span.ui-icon-bars').trigger('click');
+		$('div.lhsMenu').trigger('click');
 
 		$('div#headerDiv').find('h1').html("PlayList");
 		$('div#headerDiv').find('h1').attr("data-playlist-name", "");
@@ -163,7 +175,7 @@ $(document).on('pageinit', '[data-url="demo-page"]', function() {
 		// refresh the control group div
 		$("#demo-page").trigger("create");
 		
-		$('span.ui-icon-bars').trigger('click');
+		$('div.lhsMenu').trigger('click');
 		
 		$('div#headerDiv').find('h1').html("My PlayList");
 		$('div#headerDiv').find('h1').attr("data-playlist-name", "myPlayList");
@@ -208,7 +220,9 @@ $(document).on('pageinit', '[data-url="demo-page"]', function() {
 		$videoContainer.listview("refresh");
 		// refresh the control group div
 		$("#demo-page").trigger("create");
-		$('span.ui-icon-bars').trigger('click');
+		//$('span.ui-icon-bars').trigger('click');
+		$('div.lhsMenu').trigger('click');
+		
 		
 		$('div#headerDiv').find('h1').html("Favourites");
 		$('div#headerDiv').find('h1').attr("data-playlist-name", "favouritePlayList");
