@@ -20,9 +20,9 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //setContentView(R.layout.activity_main);
-       WebView webView = new WebView(this);
+     //  WebView webView = new WebView(this);
         
-       // WebView webView = (WebView) findViewById(R.id.webView);
+       WebView webView = (WebView) findViewById(R.id.webView);
         
         //webView.setWebChromeClient(n);
         
@@ -38,7 +38,7 @@ public class MainActivity extends Activity {
         
         
         //add the JavaScriptInterface so that JavaScript is able to use LocalStorageJavaScriptInterface's methods when calling "LocalStorage"
-        webView.addJavascriptInterface(new LocalStorageJavaScriptInterface(this), "LocalStorage");
+        webView.addJavascriptInterface(new LocalStorageJavaScriptInterface(getApplicationContext()), "LocalStorage");
         Log.d("Activity", "Main activity ended");
 
      /*   
