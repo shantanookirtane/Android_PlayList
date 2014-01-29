@@ -21,6 +21,14 @@ var $videoContainer;
 
 var videoplayer = {};
 
+try{
+    //we replace default localStorage with our Android Database one
+    window.localStorage = LocalStorage;    
+}catch(e){
+    //LocalStorage class was not found. be sure to add it to the webview
+	alert("LocalStorage ERROR : can't find android class LocalStorage. switching to raw localStorage")		        
+}
+
 
 $(document).on('pageinit', '[data-url="welcome-page"]', function() {
 
@@ -89,7 +97,7 @@ $(document).on('pageinit', '[data-url="demo-page"]', function() {
 			console.log(" loading only "+videoListSubSet.length+" elements");
 			var videoIdBasedMap = getObj(localStorage.getItem("videoIdBasedMap"));
 			$videoContainer = populateVideoContents(videoListSubSet, videoIdBasedMap, null, favouritePlayList, myPlayList);
-			$videoContainer.append("<li class='load-more-data'><a href='#'>Load More Videos</a></li>");
+			$videoContainer.append("<li class='load-more-data' data-theme='b'><a href='#'>Load More Videos</a></li>");
 		} else {
 			console.log(" Not dividing the list ");
 			var videoIdBasedMap = getObj(localStorage.getItem("videoIdBasedMap"));
@@ -98,7 +106,7 @@ $(document).on('pageinit', '[data-url="demo-page"]', function() {
 
 		$videoContainer.prepend("<li data-role='list-divider' data-theme='a'>Video(s)</li>");
 
-		$videoContainer.prepend("<li class='showVideoList hide'><a href='#'>Show Video List</a></li>");
+		$videoContainer.prepend("<li class='showVideoList hide' data-theme='b'><a href='#'>Show Video List</a></li>");
 
 		$videoContainer.listview("refresh");
 

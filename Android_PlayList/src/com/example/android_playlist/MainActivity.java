@@ -19,8 +19,8 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_main);
-     //  WebView webView = new WebView(this);
+        setContentView(R.layout.activity_main);
+       // WebView webView = new WebView(this);
         
        WebView webView = (WebView) findViewById(R.id.webView);
         
@@ -51,7 +51,7 @@ public class MainActivity extends Activity {
         //load HTML File in webview
         webView.loadUrl("file:///android_asset/main.html");
         
-        setContentView(webView);
+       // setContentView(webView);
     }
 
 
