@@ -21,13 +21,13 @@ var $videoContainer;
 
 var videoplayer = {};
 
-try{
+/*try{
     //we replace default localStorage with our Android Database one
     window.localStorage = LocalStorage;    
 }catch(e){
     //LocalStorage class was not found. be sure to add it to the webview
 	alert("LocalStorage ERROR : can't find android class LocalStorage. switching to raw localStorage")		        
-}
+}*/
 
 
 $(document).on('pageinit', '[data-url="welcome-page"]', function() {
@@ -59,8 +59,8 @@ $(document).on('pageinit', '[data-url="demo-page"]', function() {
 	console.log("page init event ");
 	// hideLoader();
 	populatePlayListMenu();
-	populatefavouritePlayListMenu(getObj(localStorage.getItem('favouritePlayList')));
-	populateMyPlayListMenu(getObj(localStorage.getItem('myPlayList')));
+	//populatefavouritePlayListMenu(getObj(localStorage.getItem('favouritePlayList')));
+	//populateMyPlayListMenu(getObj(localStorage.getItem('myPlayList')));
 	videoplayer.maxItems = 10;
 	
 	$("div.rhsHomeMenu").on("click", function (evt) {
@@ -435,10 +435,10 @@ function populateVideoContents(videoIdList, videoIdInfoMap, playListName, favour
 		$videoLi.attr('data-video-id', videoId);
 		var $videoImg = $("<img class='thumbnail'>");
 		var $infoDiv = $("<div data-role='controlgroup' data-type='vertical' class='infoDiv'>");
-		var $buttonDiv = $("<div data-role='controlgroup' data-type='horizontal'>");
-		var $buttonAnchor = $("<a href='' data-role='button' data-icon='plus' data-iconpos='notext' data-inline='true' class='addButton' title='Add to my playlist'>");
-		var $buttonAnchor1 = $("<a href='' data-role='button' data-icon='star' data-iconpos='notext' data-inline='true' class='starButton' title='Add to Favourite'>");
-		var $buttonDelete = $("<a href='' data-role='button' data-icon='delete' data-iconpos='notext' data-inline='true' class='deleteButton'>");
+		//var $buttonDiv = $("<div data-role='controlgroup' data-type='horizontal'>");
+		//var $buttonAnchor = $("<a href='' data-role='button' data-icon='plus' data-iconpos='notext' data-inline='true' class='addButton' title='Add to my playlist'>");
+		//var $buttonAnchor1 = $("<a href='' data-role='button' data-icon='star' data-iconpos='notext' data-inline='true' class='starButton' title='Add to Favourite'>");
+		//var $buttonDelete = $("<a href='' data-role='button' data-icon='delete' data-iconpos='notext' data-inline='true' class='deleteButton'>");
 		var likeIcon = '<i class="fa fa-thumbs-o-up fa-lg">'+getFormatedDigits(trim(videoMap.likes))+'</i>';
 		var disLikesIcon = '<i class="fa fa-thumbs-o-down fa-lg">'+getFormatedDigits(trim(videoMap.dislikes))+'</i>';
 		var $titleSpan = $('<span class="title">');
@@ -446,7 +446,7 @@ function populateVideoContents(videoIdList, videoIdInfoMap, playListName, favour
 		var $ratingDiv = $('<div>');
 		var $likeDislikeSpan = $('<span class="stat">');
 		// If its normal playlist then do this
-		if (!playListName) {
+/*		if (!playListName) {
 			// if the element is in favourite playlist then select it
 			if (_.indexOf(favouritePlayList, videoId) != -1) {
 				$buttonAnchor1.addClass('starSelected');
@@ -482,7 +482,7 @@ function populateVideoContents(videoIdList, videoIdInfoMap, playListName, favour
 		if (playListName === "myPlayList" || playListName === "favouritePlayList") {
 			//$buttonAnchor1.attr("data-icon", "delete");
 			$buttonDiv.append($buttonDelete);
-		}
+		}*/
 		
 		$titleSpan.text(trim(videoMap.title));
 		$statSpan.text(getFormatedDigits(trim(videoMap.total_views))+" Views");
@@ -491,7 +491,7 @@ function populateVideoContents(videoIdList, videoIdInfoMap, playListName, favour
 
 		$infoDiv.append($titleSpan).append($statSpan).append($likeDislikeSpan).append($ratingDiv);
 		$videoImg.attr("src", trim(videoMap.thumbnail));
-		$videoLi.append($videoImg).append($infoDiv).append($buttonDiv);
+		$videoLi.append($videoImg).append($infoDiv)/*.append($buttonDiv)*/;
 		$videoContainer.append($videoLi);
 		infoStr = "";
 	});
