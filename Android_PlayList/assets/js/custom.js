@@ -26,7 +26,7 @@ try{
     window.localStorage = LocalStorage;    
 }catch(e){
     //LocalStorage class was not found. be sure to add it to the webview
-	alert("LocalStorage ERROR : can't find android class LocalStorage. switching to raw localStorage")		        
+	console.log("LocalStorage ERROR : can't find android class LocalStorage. switching to raw localStorage")		        
 }
 
 
@@ -58,10 +58,12 @@ $(document).on('pagebeforecreate', '[data-url="demo-page"]', function() {
 $(document).on('pageinit', '[data-url="demo-page"]', function() {
 	console.log("page init event ");
 	// hideLoader();
+	videoplayer.maxItems = 10;
 	populatePlayListMenu();
 	populatefavouritePlayListMenu(getObj(localStorage.getItem('favouritePlayList')));
 	populateMyPlayListMenu(getObj(localStorage.getItem('myPlayList')));
-	videoplayer.maxItems = 10;
+	
+	
 	
 	$("div.rhsHomeMenu").on("click", function (evt) {
 		$.mobile.changePage( $("div[data-url='welcome-page']"), "slide", true, true);
@@ -83,7 +85,7 @@ $(document).on('pageinit', '[data-url="demo-page"]', function() {
 	
 	// Video PlayList 
 	$('ul#playListUl').on('click', 'li', function(evt) {
-		var $li = $(this);	
+		/*var $li = $(this);	
 		//console.log(" current target :: "+$(current));
 		console.log(" this :: "+$li.attr("data-vmapp-val"));
 		// clear the contents
@@ -116,7 +118,7 @@ $(document).on('pageinit', '[data-url="demo-page"]', function() {
 			$videoContainer = populateVideoContents(videoIdListVal, videoIdBasedMap, null, favouritePlayList, myPlayList);
 		}
 
-		$videoContainer.prepend("<li data-role='list-divider' data-theme='a'>Video(s)</li>");
+		$videoContainer.prepend("<li data-role='list-divider' data-theme='a'>Showing Video(s) from "+category+"</li>");
 
 		$videoContainer.prepend("<li class='showVideoList hide' data-theme='b'><a href='#'>Show Video List</a></li>");
 
@@ -128,8 +130,10 @@ $(document).on('pageinit', '[data-url="demo-page"]', function() {
 		$('div.lhsMenu').trigger('click');
 
 		$('div#headerDiv').find('h1').html("PlayList");
-		$('div#headerDiv').find('h1').attr("data-playlist-name", "");
+		$('div#headerDiv').find('h1').attr("data-playlist-name", "");*/
+		showPlaylist($(this),true);
 	});
+		
 	
 	// My PlayList
 	$('ul#myPlayListUl').on('click', 'li', function(evt) {
@@ -392,6 +396,15 @@ $(document).on('pageinit', '[data-url="demo-page"]', function() {
 });
 
 
+$(document).on('pageload', '[data-url="demo-page"]', function() {
+	console.log("page load event ");
+	// Load this only first time
+	$('ul#playListUl').find("li").first().trigger("click");
+	
+});
+
+
+
 function showLoader() {
 	$.mobile.loading("show", {
         text: "loading videos..",
@@ -411,6 +424,7 @@ $(document).on('pagebeforeshow', '[data-role="page"]', function(){
 
 
 $(document).ready(function () {
+	
 	// resize videos
 	// resizeVideos();
 	// $('div.video-wrapper').jScrollPane();
@@ -515,10 +529,12 @@ function populatePlayListMenu() {
 	// for objects to store in local storage you have to stringify
 	// refer http://stackoverflow.com/questions/2010892/storing-objects-in-html5-localstorage
 	var $playListUl = $('ul#playListUl');
+	
 	var videoIdBasedMap = getObj(localStorage.getItem("videoIdBasedMap"));
 	$.each(videoListMap, function (key, value) {
 		var imgEle = $("<img width='80px' height='60px'>");
 		var anchore = $("<a href='#'>");
+		var anchoreDiv = $("<div>");
 		var liEle = $("<li>");
 		var videoId = value.videoIdList[(value.videoIdList.length) - 1];
 		
@@ -530,15 +546,82 @@ function populatePlayListMenu() {
 		anchore.text(key+" ("+value.occurance+")");
 		
 		liEle.append(imgEle);
-		liEle.append(anchore);
+		anchoreDiv.append(anchore);
+		liEle.append(anchoreDiv);
 		$playListUl.append(liEle);
 		
 		// $playListUl.append('<li class="liElement" data-vmapp-val="'+key+'"><a href="#">' + key + '(' + value.occurance + ')</a></li>'); 
 	});
+	
+	// Load first li elements on main content
+	// $playListUl.find("li").first().trigger("click");
+	showPlaylist($playListUl.find("li").first(),false);
+
 	// Always call this to set the design to added elements
 	$playListUl.listview("refresh");
 	
+	
+	
+	
 }
+
+
+function showPlaylist($li,clickflg) {
+	// var $li = $(thi);	
+	//console.log(" current target :: "+$(current));
+	console.log(" this :: "+$li.attr("data-vmapp-val"));
+	// clear the contents
+	$videoContainer = $("ul#video-list");
+	$videoContainer.html("");
+	// first check if the li elements list in localstorage, if yes pull it from there		
+	var myPlayList = getObj(localStorage.getItem('myPlayList'));
+	var favouritePlayList = getObj(localStorage.getItem('favouritePlayList'));
+	var videoListMap = getObj(localStorage.getItem('videoListService'));
+	var category = $.trim($li.attr("data-vmapp-val"));
+	var videoIdListVal = videoListMap[category].videoIdList;
+
+	// set active category = which ever is clicked
+	videoplayer.activeCategory = category;
+	var videoListSubSet;
+	if (videoIdListVal.length > videoplayer.maxItems) {
+		// load only first videoplayer.maxItems
+		videoListSubSet = _.first(videoIdListVal, videoplayer.maxItems);
+		// set the rest of the videoList for that category
+		videoplayer.category = _.rest(videoIdListVal, videoplayer.maxItems);
+		// set global object into localstorage
+		localStorage.setItem('videoPlayer', setObj(videoplayer));	
+		console.log(" loading only "+videoListSubSet.length+" elements");
+		var videoIdBasedMap = getObj(localStorage.getItem("videoIdBasedMap"));
+		$videoContainer = populateVideoContents(videoListSubSet, videoIdBasedMap, null, favouritePlayList, myPlayList);
+		$videoContainer.append("<li class='load-more-data' data-theme='b'><a href='#'>Load More Videos</a></li>");
+	} else {
+		console.log(" Not dividing the list ");
+		var videoIdBasedMap = getObj(localStorage.getItem("videoIdBasedMap"));
+		$videoContainer = populateVideoContents(videoIdListVal, videoIdBasedMap, null, favouritePlayList, myPlayList);
+	}
+
+	$videoContainer.prepend("<li data-role='list-divider' data-theme='a'>Showing Video(s) from "+category+"</li>");
+
+	$videoContainer.prepend("<li class='showVideoList hide' data-theme='b'><a href='#'>Show Video List</a></li>");
+
+	$videoContainer.listview("refresh");
+
+	// refresh the control group div
+	$("#demo-page").trigger("create");
+
+	if (clickflg == true) {
+		$('div.lhsMenu').trigger('click');
+	}
+
+	$('div#headerDiv').find('h1').html("PlayList");
+	$('div#headerDiv').find('h1').attr("data-playlist-name", "");
+	
+}
+
+
+
+
+
 
 function populatefavouritePlayListMenu(favouritePlayList) {
 	console.log("favouritePlayListDiv :: clicked");
