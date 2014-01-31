@@ -30,7 +30,7 @@ var videoplayer = {};
 }*/
 
 
-$(document).on('pageinit', '[data-url="welcome-page"]', function() {
+/*$(document).on('pageinit', '[data-url="welcome-page"]', function() {
 
 
 	console.log("pageinit : welcome -page");
@@ -39,7 +39,7 @@ $(document).on('pageinit', '[data-url="welcome-page"]', function() {
 		return;
 	});
 
-});
+});*/
 
 $(document).on('pagebeforecreate', '[data-url="demo-page"]', function() {
 	console.log("pagebeforecreate event");
@@ -58,10 +58,11 @@ $(document).on('pagebeforecreate', '[data-url="demo-page"]', function() {
 $(document).on('pageinit', '[data-url="demo-page"]', function() {
 	console.log("page init event ");
 	// hideLoader();
+	videoplayer.maxItems = 10;
 	populatePlayListMenu();
 	//populatefavouritePlayListMenu(getObj(localStorage.getItem('favouritePlayList')));
 	//populateMyPlayListMenu(getObj(localStorage.getItem('myPlayList')));
-	videoplayer.maxItems = 10;
+	
 	
 	$("div.rhsHomeMenu").on("click", function (evt) {
 		$.mobile.changePage( $("div[data-url='welcome-page']"), "slide", true, true);
@@ -83,6 +84,7 @@ $(document).on('pageinit', '[data-url="demo-page"]', function() {
 	
 	// Video PlayList 
 	$('ul#playListUl').on('click', 'li', function(evt) {
+		showPlayList($(this),true);/*
 		var $li = $(this);	
 		//console.log(" current target :: "+$(current));
 		console.log(" this :: "+$li.attr("data-vmapp-val"));
@@ -129,7 +131,7 @@ $(document).on('pageinit', '[data-url="demo-page"]', function() {
 
 		$('div#headerDiv').find('h1').html("PlayList");
 		$('div#headerDiv').find('h1').attr("data-playlist-name", "");
-	});
+	*/});
 	
 	// My PlayList
 	$('ul#myPlayListUl').on('click', 'li', function(evt) {
@@ -501,7 +503,7 @@ function populateVideoContents(videoIdList, videoIdInfoMap, playListName, favour
 
 
 function populatePlayListMenu() {
-	
+
 	var videoListMap;
 	// Call another function to do the business logic on the result
 	/*if (!localStorage.getObj('videoListService')) {
@@ -519,26 +521,87 @@ function populatePlayListMenu() {
 	$.each(videoListMap, function (key, value) {
 		var imgEle = $("<img width='80px' height='60px'>");
 		var anchore = $("<a href='#'>");
+		var anchoreDiv = $("<div>");
 		var liEle = $("<li>");
 		var videoId = value.videoIdList[(value.videoIdList.length) - 1];
-		
+
 		liEle.attr("data-vmapp-val", key);
 		liEle.attr("class", "liElement");
-		
+
 		imgEle.attr("src", trim(videoIdBasedMap[videoId].thumbnail));
-		
+
 		anchore.text(key+" ("+value.occurance+")");
-		
+
 		liEle.append(imgEle);
-		liEle.append(anchore);
+		anchoreDiv.append(anchore);
+		liEle.append(anchoreDiv);
 		$playListUl.append(liEle);
-		
+
 		// $playListUl.append('<li class="liElement" data-vmapp-val="'+key+'"><a href="#">' + key + '(' + value.occurance + ')</a></li>'); 
 	});
+
 	// Always call this to set the design to added elements
 	$playListUl.listview("refresh");
-	
+
+	/// show some list as default
+	showPlayList($playListUl.find("li").first(),false);
+
+
+
 }
+
+function showPlayList($li, clickflag) {
+	//var $li = $(this);	
+	//console.log(" current target :: "+$(current));
+	console.log(" this :: "+$li.attr("data-vmapp-val"));
+	// clear the contents
+	$videoContainer = $("ul#video-list");
+	$videoContainer.html("");
+	// first check if the li elements list in localstorage, if yes pull it from there		
+	var myPlayList = getObj(localStorage.getItem('myPlayList'));
+	var favouritePlayList = getObj(localStorage.getItem('favouritePlayList'));
+	var videoListMap = getObj(localStorage.getItem('videoListService'));
+	var category = $.trim($li.attr("data-vmapp-val"));
+	var videoIdListVal = videoListMap[category].videoIdList;
+
+	// set active category = which ever is clicked
+	videoplayer.activeCategory = category;
+	var videoListSubSet;
+	if (videoIdListVal.length > videoplayer.maxItems) {
+		// load only first videoplayer.maxItems
+		videoListSubSet = _.first(videoIdListVal, videoplayer.maxItems);
+		// set the rest of the videoList for that category
+		videoplayer.category = _.rest(videoIdListVal, videoplayer.maxItems);
+		// set global object into localstorage
+		localStorage.setItem('videoPlayer', setObj(videoplayer));	
+		console.log(" loading only "+videoListSubSet.length+" elements");
+		var videoIdBasedMap = getObj(localStorage.getItem("videoIdBasedMap"));
+		$videoContainer = populateVideoContents(videoListSubSet, videoIdBasedMap, null, favouritePlayList, myPlayList);
+		$videoContainer.append("<li class='load-more-data' data-theme='b'><a href='#'>Load More Videos</a></li>");
+	} else {
+		console.log(" Not dividing the list ");
+		var videoIdBasedMap = getObj(localStorage.getItem("videoIdBasedMap"));
+		$videoContainer = populateVideoContents(videoIdListVal, videoIdBasedMap, null, favouritePlayList, myPlayList);
+	}
+
+	$videoContainer.prepend("<li data-role='list-divider' data-theme='a'>Showing video(s) from "+category+"</li>");
+
+	$videoContainer.prepend("<li class='showVideoList hide' data-theme='b'><a href='#'>Show Video List</a></li>");
+
+	$videoContainer.listview("refresh");
+
+	// refresh the control group div
+	$("#demo-page").trigger("create");
+	
+	if (clickflag == true) {
+		$('div.lhsMenu').trigger('click');	
+	}
+	
+	$('div#headerDiv').find('h1').html("PlayList");
+	$('div#headerDiv').find('h1').attr("data-playlist-name", "");
+}
+
+
 
 function populatefavouritePlayListMenu(favouritePlayList) {
 	console.log("favouritePlayListDiv :: clicked");
