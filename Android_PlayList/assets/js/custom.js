@@ -21,6 +21,18 @@ var $videoContainer;
 
 var videoplayer = {};
 
+
+var ajaxOptions = {
+        type : "POST",
+        url : "",
+        dataType : "json",
+        data : {},
+        xhrFields: {
+      	  withCredentials: true
+         },
+	}
+
+
 /*try{
     //we replace default localStorage with our Android Database one
     window.localStorage = LocalStorage;    
@@ -80,7 +92,20 @@ $(document).on('pageinit', '[data-url="demo-page"]', function() {
 		return;
 	});
 	
-	
+	// refresh the json data and reload it
+	$("div#headerDiv").on("click", "div.refreshRhsMenu", function (evt) {
+		console.log("clicked refresh menu");
+		ajaxOptions.setServiceName = "";
+		var ajax = $.ajax(ajaxOptions);
+        ajax.done(function (data) {
+        	console.log("setting new data into LS");
+        	var videoListMap = buildVideoListDS(data);
+    		localStorage.setItem('videoListService', setObj(videoListMap));
+    		console.log(" Setting object in localstorage :: ");
+    		// call playlist lhs menu render method
+    		populatePlayListMenu();
+        });
+	});
 	
 	// Video PlayList 
 	$('ul#playListUl').on('click', 'li', function(evt) {
@@ -390,6 +415,8 @@ $(document).on('pageinit', '[data-url="demo-page"]', function() {
     		}
 		}
 	});
+	
+	
 	
 });
 
