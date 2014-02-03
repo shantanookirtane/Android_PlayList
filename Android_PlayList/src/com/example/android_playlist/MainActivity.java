@@ -27,49 +27,34 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_main);
-       webView = new WebView(this);
+        setContentView(R.layout.activity_main);
+       //webView = new WebView(this);
         
-       // webView = (WebView) findViewById(R.id.webView);
-        
-        //webView.setWebChromeClient(n);
-        
+       webView = (WebView) findViewById(R.id.webView);
+       
+       //load HTML File in webview
+       webView.loadUrl("file:///android_asset/main.html");
+       
+       //add the JavaScriptInterface so that JavaScript is able to use LocalStorageJavaScriptInterface's methods when calling "LocalStorage"
+       webView.addJavascriptInterface(new LocalStorageJavaScriptInterface(this), "LocalStorage");
+       
+       // for debugging, this will handle the console.log() in javascript
+       webView.setWebChromeClient(new WebChromeClient() {
+           @Override
+           public boolean onConsoleMessage(ConsoleMessage cm) {
+               Log.d(TAG, cm.message() + " #" + cm.lineNumber() + " --" + cm.sourceId() );
+               return true;
+           }
+       });
+
         WebSettings settings = webView.getSettings();
         // TO enable JS
         settings.setJavaScriptEnabled(true);
         // To enable Localstorage
         settings.setDomStorageEnabled(true);
-        
         //those two lines seem necessary to keep data that were stored even if the app was killed.
         settings.setDatabaseEnabled(true);
-        
-        
-        
-        //add the JavaScriptInterface so that JavaScript is able to use LocalStorageJavaScriptInterface's methods when calling "LocalStorage"
-        webView.addJavascriptInterface(new LocalStorageJavaScriptInterface(this), "LocalStorage");
-        
-        // for debugging, this will handle the console.log() in javascript
-        webView.setWebChromeClient(new WebChromeClient() {
-            @Override
-            public boolean onConsoleMessage(ConsoleMessage cm) {
-                Log.d(TAG, cm.message() + " #" + cm.lineNumber() + " --" + cm.sourceId() );
-                return true;
-            }
-        });
-        
         Log.d("Activity", "Main activity ended");
-
-     /*   
-        webView.setWebChromeClient(new WebChromeClient() { 
-            public void onExceededDatabaseQuota(String url, String databaseIdentifier, long currentQuota, long estimatedSize, long totalUsedQuota, WebStorage.QuotaUpdater quotaUpdater) { 
-                    quotaUpdater.updateQuota(5 * 1024 * 1024); 
-                } 
-            });*/
-        
-        //load HTML File in webview
-        webView.loadUrl("file:///android_asset/main.html");
-        
-       setContentView(webView);
     }
 
 

@@ -18,7 +18,7 @@ public class LocalStorage extends SQLiteOpenHelper {
         /**
          * the name of the table 
          */
-        public static final String LOCALSTORAGE_TABLE_NAME = "local_storage_table";
+        public static final String LOCALSTORAGE_TABLE_NAME = "local_storage_video_list_table";
         
         /**
          * the id column of the table LOCALSTORAGE_TABLE_NAME
