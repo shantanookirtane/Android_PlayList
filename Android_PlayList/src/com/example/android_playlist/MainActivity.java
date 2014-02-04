@@ -27,10 +27,10 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-       //webView = new WebView(this);
+       // setContentView(R.layout.activity_main);
+       webView = new WebView(this);
         
-       webView = (WebView) findViewById(R.id.webView);
+       //webView = (WebView) findViewById(R.id.webView);
        
        //load HTML File in webview
        webView.loadUrl("file:///android_asset/main.html");
@@ -54,6 +54,8 @@ public class MainActivity extends Activity {
         settings.setDomStorageEnabled(true);
         //those two lines seem necessary to keep data that were stored even if the app was killed.
         settings.setDatabaseEnabled(true);
+        settings.setDatabasePath(this.getFilesDir().getParentFile().getPath()+"/databases/");
+        setContentView(webView);
         Log.d("Activity", "Main activity ended");
     }
 
