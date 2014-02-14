@@ -30,7 +30,7 @@ try{
 }
 
 
-$(document).on('pageinit', '[data-url="welcome-page"]', function() {
+/*$(document).on('pageinit', '[data-url="welcome-page"]', function() {
 
 
 	console.log("pageinit : welcome -page");
@@ -39,7 +39,7 @@ $(document).on('pageinit', '[data-url="welcome-page"]', function() {
 		return;
 	});
 
-});
+});*/
 
 $(document).on('pagebeforecreate', '[data-url="demo-page"]', function() {
 	console.log("pagebeforecreate event");
@@ -81,6 +81,39 @@ $(document).on('pageinit', '[data-url="demo-page"]', function() {
 		return;
 	});
 	
+	
+	// refresh the json data and reload it
+	$("div#headerDiv").on("click", "div.refreshRhsMenu", function (evt) {
+		console.log("clicked refresh menu");
+		// Clears the DB
+		window.localStorage.clear();
+
+		// var videoListMap;
+		/*try {
+			var videoJsonDatFrmServer = window.localStorage.getJsonData();
+			videoListMap = buildVideoListDS(videoJsonDatFrmServer);
+		} catch (e) {*/
+			//console.log("No method found window.localStorage.getJsonData() ")
+			var videoListMap = buildVideoListDS(videosJsonData);
+		/*}*/
+		window.localStorage.setItem('videoListService', setObj(videoListMap));
+		console.log(" Setting object in localstorage :: ");
+		// call playlist lhs menu render method
+		populatePlayListMenu();
+		populatefavouritePlayListMenu(getObj(window.localStorage.getItem('favouritePlayList')));
+		populateMyPlayListMenu(getObj(window.localStorage.getItem('myPlayList')));
+
+/*		ajaxOptions.setServiceName = "";
+		var ajax = $.ajax(ajaxOptions);
+        ajax.done(function (data) {
+        	console.log("setting new data into LS");
+        	var videoListMap = buildVideoListDS(data);
+    		localStorage.setItem('videoListService', setObj(videoListMap));
+    		console.log(" Setting object in localstorage :: ");
+    		// call playlist lhs menu render method
+    		populatePlayListMenu();
+        });*/
+	});
 	
 	
 	// Video PlayList 
@@ -245,7 +278,7 @@ $(document).on('pageinit', '[data-url="demo-page"]', function() {
 				playList += ","+videoId;
 			}
 		});
-		var iFrameEle = $('div#contentVideosId').find('div.video-container-div').find('iframe');
+		var iFrameEle = $('div#contentVideosId').find('div.video-container-div').find('iframe');//.find("source");
 		iFrameEle.attr('src', 'http://www.youtube.com/embed/'+firstV+'?playlist='+playList);
 		$self.prop("value", "Playing All");
 		// $self.attr('disabled', true);
@@ -337,7 +370,7 @@ $(document).on('pageinit', '[data-url="demo-page"]', function() {
 		console.log("click on image");
 		var $this = $(this);
 		var videoId = $this.closest('li.videoLiEle').attr('data-video-id');
-		var iFrameEle = $('div#contentVideosId').find('div.video-container-div').find('iframe');
+		var iFrameEle = $('div#contentVideosId').find('div.video-container-div').find('iframe');//.find("source");
 		iFrameEle.attr('src', 'http://www.youtube.com/embed/'+videoId);
 		// hide the list and show a single list
 		

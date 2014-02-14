@@ -141,3 +141,12 @@ div#headerDiv div.rhsHomeMenu {
 	position: absolute;
 	cursor:pointer;
 }
+
+div#headerDiv div.refreshRhsMenu {
+	right:60px;
+	margin-top: -36px;
+	vertical-align: middle;
+	z-index: 10;
+	position: absolute;
+	cursor:pointer;
+}

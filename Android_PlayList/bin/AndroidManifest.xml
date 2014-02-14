@@ -20,7 +20,8 @@
         <activity
             android:name="com.example.android_playlist.MainActivity"
             android:label="@string/app_name" 
-            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboard|keyboardHidden|screenSize" 
+    		android:screenOrientation="sensor" 
             >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -34,4 +35,9 @@
 </manifest>
 
 <!--  android:configChanges="orientation|keyboard|keyboardHidden" 
-            android:screenOrientation="sensor"  -->
+            android:screenOrientation="sensor" 
+            
+            android:hardwareAccelerated="true"
+            android:screenOrientation="portrait"
+            
+             -->

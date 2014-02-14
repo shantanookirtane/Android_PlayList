@@ -6,9 +6,10 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
-import android.webkit.ConsoleMessage;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
@@ -17,7 +18,8 @@ import android.webkit.WebView;
 public class MainActivity extends Activity {
 	
 	
-    private WebView webView;
+	private VideoEnabledWebView webView;
+	private VideoEnabledWebChromeClient webChromeClient;
     private static final String TAG = MainActivity.class.getSimpleName();
 /*    <WebView android:id="@+id/webview"
     android:layout_width="fill_parent"
@@ -26,7 +28,76 @@ public class MainActivity extends Activity {
 */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    	
+    	super.onCreate(savedInstanceState);
+
+        // Set layout
+        setContentView(R.layout.activity_main);
+
+        // Save the web view
+        webView = (VideoEnabledWebView) findViewById(R.id.webView);
+
+        // Initialize the VideoEnabledWebChromeClient and set event handlers
+        View nonVideoLayout = findViewById(R.id.nonVideoLayout); // Your own view, read class comments
+        ViewGroup videoLayout = (ViewGroup) findViewById(R.id.videoLayout); // Your own view, read class comments
+     //   View loadingView = getLayoutInflater().inflate(R.layout.view_loading_video, null); // Your own view, read class comments
+        webChromeClient = new VideoEnabledWebChromeClient(nonVideoLayout, videoLayout, webView) { // See all available constructors...
+            // Subscribe to standard events, such as onProgressChanged()...
+            @Override
+            public void onProgressChanged(WebView view, int progress) {
+                // Your code...
+            }
+        };
+        
+        webChromeClient.setOnToggledFullscreen(new VideoEnabledWebChromeClient.ToggledFullscreenCallback() {
+            @Override
+            public void toggledFullscreen(boolean fullscreen) {
+                // Your code to handle the full-screen change, for example showing and hiding the title bar. Example:
+                if (fullscreen) {
+                    WindowManager.LayoutParams attrs = getWindow().getAttributes();
+                    attrs.flags |= WindowManager.LayoutParams.FLAG_FULLSCREEN;
+                    attrs.flags |= WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
+                    getWindow().setAttributes(attrs);
+                    if (android.os.Build.VERSION.SDK_INT >= 14)
+                    {
+                        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE);
+                    }
+                }
+                else
+                {
+                    WindowManager.LayoutParams attrs = getWindow().getAttributes();
+                    attrs.flags &= ~WindowManager.LayoutParams.FLAG_FULLSCREEN;
+                    attrs.flags &= ~WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
+                    getWindow().setAttributes(attrs);
+                    if (android.os.Build.VERSION.SDK_INT >= 14)
+                    {
+                        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
+                    }
+                }
+            }
+        });
+        
+        
+      //add the JavaScriptInterface so that JavaScript is able to use LocalStorageJavaScriptInterface's methods when calling "LocalStorage"
+        webView.addJavascriptInterface(new LocalStorageJavaScriptInterface(this), "LocalStorage");
+        
+        WebSettings settings = webView.getSettings();
+        // TO enable JS
+        settings.setJavaScriptEnabled(true);
+        // To enable Localstorage
+        settings.setDomStorageEnabled(true);
+        //those two lines seem necessary to keep data that were stored even if the app was killed.
+        settings.setDatabaseEnabled(true);
+        settings.setDatabasePath(this.getFilesDir().getParentFile().getPath()+"/databases/");
+        
+        webView.setWebChromeClient(webChromeClient);
+
+        // Navigate everywhere you want, this classes have only been tested on YouTube's mobile site
+        webView.loadUrl("file:///android_asset/main.html");
+    }
+    	
+    	
+      /*  super.onCreate(savedInstanceState);
        // setContentView(R.layout.activity_main);
        webView = new WebView(this);
         
@@ -56,8 +127,8 @@ public class MainActivity extends Activity {
         settings.setDatabaseEnabled(true);
         settings.setDatabasePath(this.getFilesDir().getParentFile().getPath()+"/databases/");
         setContentView(webView);
-        Log.d("Activity", "Main activity ended");
-    }
+        Log.d("Activity", "Main activity ended");*/
+   // }
 
 
     @Override
@@ -65,6 +136,24 @@ public class MainActivity extends Activity {
         // Inflate the menu; this adds items to the action bar if it is present.
       //  getMenuInflater().inflate(R.menu.main, menu);
         return true;
+    }
+    
+    @Override
+    public void onBackPressed()
+    {
+        // Notify the VideoEnabledWebChromeClient, and handle it ourselves if it doesn't handle it
+        if (!webChromeClient.onBackPressed())
+        {
+            if (webView.canGoBack())
+            {
+                webView.goBack();
+            }
+            else
+            {
+                // Close app (presumably)
+                super.onBackPressed();
+            }
+        }
     }
     
     
@@ -161,6 +250,36 @@ public class MainActivity extends Activity {
                     database.delete(LocalStorage.LOCALSTORAGE_TABLE_NAME, null, null);
                     database.close();
             }
+            
+            /*            
+             * gets the JSON data.
+             * @throws IOException 
+             *//*
+            @JavascriptInterface
+            public String getJsonData() throws IOException {
+            	Log.d(TAG, "Loading json data start");
+            	AssetManager am = mContext.getAssets();
+            	InputStream jsonDataIStream = null;
+            	//String jsonDataString = null;
+            	JsonElement jsonElement = null;
+            	JsonObject configObject = null;
+            	try {
+            	jsonDataIStream = am.open("videosData.json");
+            	jsonElement = new JsonParser().parse(IOUtils.toString(jsonDataIStream));
+            	configObject = jsonElement.getAsJsonObject();
+            	} catch (IOException ioe) {
+            		ioe.printStackTrace();
+            		Log.e(TAG, "Error Reading the json data from server, loading default version");
+            	} finally {
+            		if (null != jsonDataIStream) {
+            			jsonDataIStream.close();
+            		}
+            	}
+            	return configObject.toString();
+            }*/       
+            
+            
+            
     }
 
     

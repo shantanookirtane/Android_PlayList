@@ -13,7 +13,7 @@
         <link rel="stylesheet" href="css/custom.css">	
 	</head>  
 	<body>
-		<div data-url="welcome-page" data-role="page" class="welcome-page-container">
+		<!-- <div data-url="welcome-page" data-role="page" class="welcome-page-container">
 			<div data-role="header" id="welcome-page-header" data-position="fixed" data-theme="b">
 		        <h1>Welcome</h1>
 		    </div>
@@ -42,7 +42,7 @@
 					<button id="more-apps" data-theme="b" class="ui-btn ui-btn-inline ui-corner-all ui-btn-b">More Apps</button>
 					<button id="show-video-playlist-app" data-theme="b" class="ui-btn ui-btn-inline ui-shadow ui-corner-all ui-btn-b">Go to App</button>
 			</div>
-		</div>
+		</div> -->
 		<div data-url="demo-page" data-role="page" id="demo-page" data-theme="d" class="hide">
 		    <div data-role="header" id="headerDiv" data-position="fixed" data-theme="b">
 		        <h1>Videos</h1>
@@ -50,9 +50,12 @@
 		       	 <div class="lhsMenu">
 		         <i class="fa fa-bars fa-2x"></i>
 		         </div>
-		         <div class="rhsHomeMenu">
-		         <i class="fa fa-home fa-2x"></i>	
-		         </div> 
+		         <div class="refreshRhsMenu">
+		         	<i class="fa fa-refresh fa-2x"></i>
+		         </div>
+		         <!-- <div class="rhsHomeMenu">
+		         	<i class="fa fa-home fa-2x"></i>	
+		         </div> --> 
 		         
 		        <!-- <a href="" class="welcome-page-icon" data-icon="home" data-position="right" data-iconpos="notext" data-shadow="false" data-iconshadow="false"></a> -->
 		    </div><!-- /header -->
@@ -60,6 +63,9 @@
 		    <div data-role="content" id="contentVideosId" class="contentVideosClass">
 		        <div class="video-wrapper">
 		        	<div class="video-container-div">
+		 	 	      	<!-- <video width="800" height="450" id="player1" preload="none">
+    						<source type="video/youtube" src="http://www.youtube.com/embed/" />
+						</video> -->
 		        		<iframe width="800" height="450" src="http://www.youtube.com/embed/"></iframe>
 		        	</div>
 		            <ul data-role="listview"  id="video-list" data-theme="d">
