@@ -13,6 +13,62 @@
  * {key ==> LHS Menu name : Value : {generated list of Li elements}}
  * 
  * 
+ * youtube api json format
+ * 
+ * {
+    "apiVersion":"2.1",
+    "data":{
+        "updated":"2011-10-31T19:24:09.441Z",
+        "totalItems":14,
+        "startIndex":1,
+        "itemsPerPage":1,
+        "items":[{
+            "id":"O9f1bBeYpqA",
+            "uploaded":"2011-10-19T13:07:28.000Z",
+            "updated":"2011-10-31T16:57:34.000Z",
+            "uploader":"ironmaiden",
+            "category":"Music",
+            "title":"IMTV London",
+            "description":"A quick IMTV from the O2. The full IMTV UK episode will be available to fanclub members soon!",
+            "tags":["iron","maiden","imtv","on","board","flight","666","Iron Maiden","United Kingdom","Metal"],
+            "thumbnail":{
+                "sqDefault":"http://i.ytimg.com/vi/O9f1bBeYpqA/default.jpg",
+                "hqDefault":"http://i.ytimg.com/vi/O9f1bBeYpqA/hqdefault.jpg"
+            },
+            "player":{
+                "default":"http://www.youtube.com/watch?v=O9f1bBeYpqA&feature=youtube_gdata_player",
+                "mobile":"http://m.youtube.com/details?v=O9f1bBeYpqA"
+            },
+            "content":{
+                "5":"http://www.youtube.com/v/O9f1bBeYpqA?version=3&f=videos&app=youtube_gdata",
+                "1":"rtsp://v3.cache5.c.youtube.com/CiILENy73wIaGQmgppgXbPXXOxMYDSANFEgGUgZ2aWRlb3MM/0/0/0/video.3gp",
+                "6":"rtsp://v2.cache8.c.youtube.com/CiILENy73wIaGQmgppgXbPXXOxMYESARFEgGUgZ2aWRlb3MM/0/0/0/video.3gp"
+            },
+            "duration":316,
+            "aspectRatio":"widescreen",
+            "rating":4.9898734, // avg_rating
+            "likeCount":"394", // like count
+            "ratingCount":395,
+            "viewCount":47086, // total views
+            "favoriteCount":110,
+            "commentCount":105,
+            "accessControl":{
+                "comment":"allowed",
+                "commentVote":"allowed",
+                "videoRespond":"moderated",
+                "rate":"allowed",
+                "embed":"allowed",
+                "list":"allowed",
+                "autoPlay":"allowed",
+                "syndicate":"allowed"
+            }
+        }]
+    }
+ * 
+ * 
+ * 
+ * 
+ * 
  * */
 
 // Global Variables
@@ -88,14 +144,14 @@ $(document).on('pageinit', '[data-url="demo-page"]', function() {
 		// Clears the DB
 		window.localStorage.clear();
 
-		// var videoListMap;
-		/*try {
+		var videoListMap;
+		try {
 			var videoJsonDatFrmServer = window.localStorage.getJsonData();
-			videoListMap = buildVideoListDS(videoJsonDatFrmServer);
-		} catch (e) {*/
+			videoListMap = buildVideoListDS(JSON.parse(videoJsonDatFrmServer));
+		} catch (e) {
 			//console.log("No method found window.localStorage.getJsonData() ")
-			var videoListMap = buildVideoListDS(videosJsonData);
-		/*}*/
+			videoListMap = buildVideoListDS(videosJsonData);
+		}
 		window.localStorage.setItem('videoListService', setObj(videoListMap));
 		console.log(" Setting object in localstorage :: ");
 		// call playlist lhs menu render method
@@ -114,6 +170,67 @@ $(document).on('pageinit', '[data-url="demo-page"]', function() {
     		populatePlayListMenu();
         });*/
 	});
+	
+	
+	// on clicking search
+	$('ul#searchPlaylistUl').on('click', 'li', function(evt) {
+		$("div#contentVideosId").find("div.video-wrapper").toggleClass("show hide"); //css("display","none");
+		$("div#contentVideosId").find("div.video-search-wrapper").toggleClass("show hide"); //.css("display","block");
+		
+		$('div#headerDiv').find('h1').html("Search");
+		$('div#headerDiv').find('h1').attr("data-playlist-name", "");
+	});
+	
+	// search videos
+	$('div.video-search-div').on('click', 'a.search-video-button', function(evt) {
+		var queryString = $("#video-search-input").val();
+		getVideosFromYoutube(queryString);
+		
+	});
+	
+	// add to localStorage
+	$('ul#search-result-video-list').on('click', 'a.searchAddButton', function(evt) {
+		
+		// $("div#popupBasic").popup("open");
+		var $this = $(this);
+		var liEle = $this.closest('li.videoLiEle');
+		var searchVId = liEle.attr("search-video-id");
+
+		var videoListMap = getObj(window.localStorage.getItem('videoListService'));
+		
+	
+		if (videoListMap["Searched_Videos"]) {
+			var innerMap = videoListMap["Searched_Videos"];
+			var count = innerMap["occurance"]
+			innerMap["occurance"] = count + 1;
+			innerMap["videoIdList"].push(searchVId);
+		} else {
+			var innerMap = {};
+			innerMap["occurance"] = 1;
+			innerMap["videoIdList"] = [];
+			(innerMap["videoIdList"]).push(searchVId);
+			videoListMap["Searched_Videos"] = innerMap;
+		}
+		// set the updated map back to LS
+		window.localStorage.setItem('videoListService', setObj(videoListMap));
+		
+		var videoIdBasedMap = getObj(window.localStorage.getItem("videoIdBasedMap"));
+		var searchVideoMap = getObj(window.localStorage.getItem("tempSearchVideoMap"));
+		videoIdBasedMap[searchVId] = searchVideoMap[searchVId];
+		
+		// set the updated map back to LS
+		window.localStorage.setItem('videoIdBasedMap', setObj(videoIdBasedMap));
+		
+		// delete the Li
+		liEle.remove();
+		
+		// populate the playlist Menu
+		populatePlayListMenu();
+		
+	//	$("div#popupBasic").popup("close");
+		
+	});
+	
 	
 	
 	// Video PlayList 
@@ -164,12 +281,28 @@ $(document).on('pageinit', '[data-url="demo-page"]', function() {
 
 		$('div#headerDiv').find('h1').html("PlayList");
 		$('div#headerDiv').find('h1').attr("data-playlist-name", "");*/
+		if ($("div#contentVideosId").find("div.video-wrapper").hasClass("hide")) {
+			$("div#contentVideosId").find("div.video-wrapper").toggleClass("show hide"); //css("display","none");	
+		}
+		if ($("div#contentVideosId").find("div.video-search-wrapper").hasClass("show")) {
+			$("div#contentVideosId").find("div.video-search-wrapper").toggleClass("show hide"); //.css("display","block");
+		}
+		
 		showPlaylist($(this),true);
 	});
 		
 	
 	// My PlayList
 	$('ul#myPlayListUl').on('click', 'li', function(evt) {
+		
+		if ($("div#contentVideosId").find("div.video-wrapper").hasClass("hide")) {
+			$("div#contentVideosId").find("div.video-wrapper").toggleClass("show hide"); //css("display","none");	
+		}
+		if ($("div#contentVideosId").find("div.video-search-wrapper").hasClass("show")) {
+			$("div#contentVideosId").find("div.video-search-wrapper").toggleClass("show hide"); //.css("display","block");
+		}
+		
+		
 		// alert("li item clicked");
 		// get the videos from localStorage
 		// populate them in Li
@@ -219,7 +352,15 @@ $(document).on('pageinit', '[data-url="demo-page"]', function() {
 	});
 	
 	// Favourates
-	$('ul#favouritePlayListUl').on('click', 'li', function(evt){
+	$('ul#favouritePlayListUl').on('click', 'li', function(evt) {
+		
+		if ($("div#contentVideosId").find("div.video-wrapper").hasClass("hide")) {
+			$("div#contentVideosId").find("div.video-wrapper").toggleClass("show hide"); //css("display","none");	
+		}
+		if ($("div#contentVideosId").find("div.video-search-wrapper").hasClass("show")) {
+			$("div#contentVideosId").find("div.video-search-wrapper").toggleClass("show hide"); //.css("display","block");
+		}
+		
 		// alert("li item clicked");
 		// get the videos from localStorage
 		// populate them in Li
@@ -563,6 +704,9 @@ function populatePlayListMenu() {
 	// refer http://stackoverflow.com/questions/2010892/storing-objects-in-html5-localstorage
 	var $playListUl = $('ul#playListUl');
 	
+	// clear the playlist
+	$playListUl.html("");
+	
 	var videoIdBasedMap = getObj(window.localStorage.getItem("videoIdBasedMap"));
 	$.each(videoListMap, function (key, value) {
 		var imgEle = $("<img width='80px' height='60px'>");
@@ -775,3 +919,91 @@ function trim(str) {
 function getFormatedDigits(val) { 
     return val.replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"); 
 }
+
+
+function getVideosFromYoutube(queryString) {
+	
+	var URL = "https://gdata.youtube.com/feeds/api/videos?max-results=20&orderby=viewCount&v=2&alt=jsonc&start-index=1";
+	URL+= "&q=";
+	URL+= queryString;
+	$.getJSON(URL, 
+            function(response) {
+				var $searchVideoContainer = $("ul#search-result-video-list");
+				$searchVideoContainer.html("");
+                if(response.data && response.data.items) {
+                	 console.info("YT data ", response.data.items);
+                    var items = response.data.items;
+                    if (items.length === 0) {
+                    	// show some message and return
+                    }
+                    var videoMap = {}    
+                    _.each(items, function(value, index, list) {
+                    	var videoDetailMap = {};
+                    	var valiases = [];
+                    	valiases.push(value.category);
+                    	videoDetailMap["video_id"] = value.id;
+                    	videoDetailMap["aliases"] = valiases;
+                    	videoDetailMap["avg_rating"] = value.rating;
+                    	videoDetailMap["likes"] = value.likeCount;
+                    	videoDetailMap["dislikes"] = 0;
+                    	videoDetailMap["total_views"] = value.viewCount;
+                    	videoDetailMap["title"] = value.title;
+                    	videoDetailMap["thumbnail"] = value["thumbnail"]["sqDefault"];
+                    	videoMap[value.id] = videoDetailMap;
+                    	if (_.contains(_.keys(getObj(window.localStorage.getItem("videoIdBasedMap"))), value.id)) {
+                    		populateSearchVideosContent(value.id, videoDetailMap, $searchVideoContainer, true);
+                    	} else {
+                    		populateSearchVideosContent(value.id, videoDetailMap, $searchVideoContainer, false);
+                    	}
+                    });
+                    
+                    $searchVideoContainer.prepend("<li data-role='list-divider' data-theme='a'>Search Result</li>");
+                    $searchVideoContainer.listview("refresh");
+            		// refresh the control group div
+            		$("#demo-page").trigger("create");
+                    window.localStorage.setItem("tempSearchVideoMap", setObj(videoMap))
+                   // console.log("temp search obj", videoMap);
+                    // show the list on screen, add add to playlist button or disable it to show that its already added
+                    // on click of add to playlist button
+                }
+            });
+}
+
+
+	function populateSearchVideosContent(videoId, videoMap, $searchVideoContainer, disableFlag) {
+	
+	
+		var $videoLi = $("<li class='videoLiEle' data-theme='c'>");
+		var videoId = trim(videoMap.video_id);
+		$videoLi.attr('search-video-id', videoId);
+		var $videoImg = $("<img class='thumbnail'>");
+		var $infoDiv = $("<div data-role='controlgroup' data-type='vertical' class='infoDiv'>");
+		var $buttonDiv = $("<div data-role='controlgroup' data-type='horizontal'>");
+		var $buttonAnchor = $("<a href='' data-mini='true' data-theme='b' data-role='button' data-inline='true' data-corners='false' class='searchAddButton'>");
+		var likeIcon = '<i class="fa fa-thumbs-o-up fa-lg">'+getFormatedDigits(trim(videoMap.likes))+'</i>';
+	//	var disLikesIcon = '<i class="fa fa-thumbs-o-down fa-lg">'+getFormatedDigits(trim(videoMap.dislikes))+'</i>';
+		var $titleSpan = $('<span class="title">');
+		var $statSpan = $('<span class="stat">');
+		var $ratingDiv = $('<div>');
+		var $likeDislikeSpan = $('<span class="stat">');
+		
+		
+		if (disableFlag) {
+			$buttonAnchor.addClass("ui-disabled");
+			$buttonAnchor.text("Already in Playlist");
+		} else {
+			$buttonAnchor.text("Add to Playlist");
+		}
+		
+		$buttonDiv.append($buttonAnchor);
+		$titleSpan.text(trim(videoMap.title));
+		$statSpan.text(getFormatedDigits(trim(videoMap.total_views))+" Views");
+		$likeDislikeSpan.html(likeIcon);
+		$ratingDiv.raty({score: trim(videoMap.avg_rating)}) //.text("Avg Rating "+trim(videoMap.avg_rating));
+
+		$infoDiv.append($titleSpan).append($statSpan).append($likeDislikeSpan).append($ratingDiv);
+		$videoImg.attr("src", trim(videoMap.thumbnail));
+		$videoLi.append($videoImg).append($infoDiv).append($buttonDiv);
+		$searchVideoContainer.append($videoLi);
+			
+ }

@@ -43,6 +43,10 @@ ul#video-list li.hide {
 	display: block;
 }
 
+.hide {
+	display: none;
+}
+
 
 /* Thanks to stackoverflow */
  ul li > * {

@@ -1,19 +1,31 @@
 package com.example.android_playlist;
 
+import java.io.IOException;
+import java.io.InputStream;
+
+import org.apache.commons.io.IOUtils;
+
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.res.AssetManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.webkit.JavascriptInterface;
-import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
+import android.webkit.WebSettings.PluginState;
 import android.webkit.WebView;
+
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 public class MainActivity extends Activity {
 	
@@ -26,7 +38,8 @@ public class MainActivity extends Activity {
     android:layout_height="fill_parent"
 	/> 
 */
-    @Override
+    
+	@Override
     protected void onCreate(Bundle savedInstanceState) {
     	
     	super.onCreate(savedInstanceState);
@@ -82,6 +95,7 @@ public class MainActivity extends Activity {
         webView.addJavascriptInterface(new LocalStorageJavaScriptInterface(this), "LocalStorage");
         
         WebSettings settings = webView.getSettings();
+         
         // TO enable JS
         settings.setJavaScriptEnabled(true);
         // To enable Localstorage
@@ -91,44 +105,17 @@ public class MainActivity extends Activity {
         settings.setDatabasePath(this.getFilesDir().getParentFile().getPath()+"/databases/");
         
         webView.setWebChromeClient(webChromeClient);
+        
+        if (Build.VERSION.SDK_INT < 8) {
+        	//webView.getSettings().setPluginState(state);
+        } else {
+        	webView.getSettings().setPluginState(PluginState.ON);
+        }
 
         // Navigate everywhere you want, this classes have only been tested on YouTube's mobile site
         webView.loadUrl("file:///android_asset/main.html");
     }
-    	
-    	
-      /*  super.onCreate(savedInstanceState);
-       // setContentView(R.layout.activity_main);
-       webView = new WebView(this);
-        
-       //webView = (WebView) findViewById(R.id.webView);
-       
-       //load HTML File in webview
-       webView.loadUrl("file:///android_asset/main.html");
-       
-       //add the JavaScriptInterface so that JavaScript is able to use LocalStorageJavaScriptInterface's methods when calling "LocalStorage"
-       webView.addJavascriptInterface(new LocalStorageJavaScriptInterface(this), "LocalStorage");
-       
-       // for debugging, this will handle the console.log() in javascript
-       webView.setWebChromeClient(new WebChromeClient() {
-           @Override
-           public boolean onConsoleMessage(ConsoleMessage cm) {
-               Log.d(TAG, cm.message() + " #" + cm.lineNumber() + " --" + cm.sourceId() );
-               return true;
-           }
-       });
 
-        WebSettings settings = webView.getSettings();
-        // TO enable JS
-        settings.setJavaScriptEnabled(true);
-        // To enable Localstorage
-        settings.setDomStorageEnabled(true);
-        //those two lines seem necessary to keep data that were stored even if the app was killed.
-        settings.setDatabaseEnabled(true);
-        settings.setDatabasePath(this.getFilesDir().getParentFile().getPath()+"/databases/");
-        setContentView(webView);
-        Log.d("Activity", "Main activity ended");*/
-   // }
 
 
     @Override
@@ -254,9 +241,12 @@ public class MainActivity extends Activity {
             /*            
              * gets the JSON data.
              * @throws IOException 
-             *//*
+             */
+            /**
+             * @return
+             */
             @JavascriptInterface
-            public String getJsonData() throws IOException {
+            public String getJsonData() {
             	Log.d(TAG, "Loading json data start");
             	AssetManager am = mContext.getAssets();
             	InputStream jsonDataIStream = null;
@@ -264,19 +254,24 @@ public class MainActivity extends Activity {
             	JsonElement jsonElement = null;
             	JsonObject configObject = null;
             	try {
-            	jsonDataIStream = am.open("videosData.json");
+            	jsonDataIStream = am.open("videos_test.jsonp");
             	jsonElement = new JsonParser().parse(IOUtils.toString(jsonDataIStream));
             	configObject = jsonElement.getAsJsonObject();
             	} catch (IOException ioe) {
-            		ioe.printStackTrace();
+            		// ioe.printStackTrace();
             		Log.e(TAG, "Error Reading the json data from server, loading default version");
             	} finally {
             		if (null != jsonDataIStream) {
-            			jsonDataIStream.close();
+            			try {
+							jsonDataIStream.close();
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							Log.e(TAG, "Error closing jsonDataStream");
+						}
             		}
             	}
-            	return configObject.toString();
-            }*/       
+            	return ((configObject == null)?"":configObject.toString());
+            }
             
             
             

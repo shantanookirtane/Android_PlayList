@@ -61,7 +61,7 @@
 		    </div><!-- /header -->
 		    <!-- Following Div will be used to add the video lists -->
 		    <div data-role="content" id="contentVideosId" class="contentVideosClass">
-		        <div class="video-wrapper">
+		        <div class="video-wrapper show">
 		        	<div class="video-container-div">
 		 	 	      	<!-- <video width="800" height="450" id="player1" preload="none">
     						<source type="video/youtube" src="http://www.youtube.com/embed/" />
@@ -71,7 +71,15 @@
 		            <ul data-role="listview"  id="video-list" data-theme="d">
 		            	
 		            </ul>
-		        </div><!-- /video=wrapper -->
+		        </div><!-- video=wrapper -->
+		        <div class="video-search-wrapper hide">
+		        	<div class="video-search-div" data-role="fieldcontain">
+		        		<input type="text" name="name" id="video-search-input" value=""/>
+		        		<a href="#" data-role="button" class="search-video-button" data-icon="search" data-inline="true" data-iconpos="notext"></a>
+		        	</div>
+		            <ul data-role="listview"  id="search-result-video-list" data-theme="d">
+		            </ul>
+		        </div>
 		    </div><!-- /content -->
 		    <div data-role="panel" id="left-panel" data-theme="c">
  <!-- 		    	<div data-role="listview" >
@@ -83,6 +91,12 @@
 			        </ul>
 		        </div>  -->		
           		<div data-role="collapsible-set" id="lhsMenuDiv" data-inset="false" data-iconpos="right" data-theme="b" data-content-theme="c">
+          			<div data-role="collapsible" id="searchPlaylistDiv" data-collapsed="false">
+            			<h3>Search</h3>
+              			<ul data-role="listview" id="searchPlaylistUl">
+              				<li><a href="#"><i class="fa fa-search fa-lg"></i>More Videos</a></li>
+              			</ul>
+            		</div>
              		<div data-role="collapsible" id="myPlayListDiv" data-collapsed="false">
             			<h3>My PlayList</h3>
               			<ul data-role="listview" id="myPlayListUl">
@@ -100,6 +114,12 @@
             		</div>
             	</div> <!-- Collapisble-set end -->
 		    </div><!-- /panel -->
+		    
+		    	
+
+					<!-- <div data-role="popup" id="popupBasic">
+						<p>This is a completely basic popup, no options set.<p>
+					</div> -->
 		</div>
 		<!-- Scripts -->
 		<script src="js/plugin/modernizr-2.7.1.min.js"></script>
@@ -108,7 +128,7 @@
         <script src="js/plugin/jquery.raty.min.js"></script>
         <script src="js/plugin/underscore-min.js"></script>
         <script src="js/videos.jsonp" type="text/javascript"></script>
-        <script src="js/plugin/ydn.db-isw-core-qry.js"></script>
+        <!-- <script src="js/plugin/ydn.db-isw-core-qry.js"></script> -->
         <script src="js/custom.js"></script>
 	</body>
 </html>
