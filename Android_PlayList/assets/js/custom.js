@@ -179,6 +179,9 @@ $(document).on('pageinit', '[data-url="demo-page"]', function() {
 		
 		$('div#headerDiv').find('h1').html("Search");
 		$('div#headerDiv').find('h1').attr("data-playlist-name", "");
+		
+		// remove warning when coming back
+		$('ul#search-result-video-list').find("div.searchInfo").remove();
 	});
 	
 	// search videos
@@ -198,10 +201,20 @@ $(document).on('pageinit', '[data-url="demo-page"]', function() {
 
 		var videoListMap = getObj(window.localStorage.getItem('videoListService'));
 		
-	
+		var $ulParent = $('ul#search-result-video-list');
+		
+		
 		if (videoListMap["Searched_Videos"]) {
 			var innerMap = videoListMap["Searched_Videos"];
 			var count = innerMap["occurance"]
+			// If reached 30 then do not allow to add 
+			if (count === 2) {
+				if ($ulParent.find("div.searchInfo").length === 0) {
+					$ulParent.prepend("<div class='searchInfo alert-danger'>Unable to add Video, Max 30 Videos are allowed in Searched_Videos category, Please remove some videos and try again!!!<div>");
+				}
+				$.mobile.silentScroll(0);
+				return;
+			}
 			innerMap["occurance"] = count + 1;
 			innerMap["videoIdList"].push(searchVId);
 		} else {
@@ -235,59 +248,13 @@ $(document).on('pageinit', '[data-url="demo-page"]', function() {
 	
 	// Video PlayList 
 	$('ul#playListUl').on('click', 'li', function(evt) {
-		/*var $li = $(this);	
-		//console.log(" current target :: "+$(current));
-		console.log(" this :: "+$li.attr("data-vmapp-val"));
-		// clear the contents
-		$videoContainer = $("ul#video-list");
-		$videoContainer.html("");
-		// first check if the li elements list in localstorage, if yes pull it from there		
-		var myPlayList = getObj(window.localStorage.getItem('myPlayList'));
-		var favouritePlayList = getObj(window.localStorage.getItem('favouritePlayList'));
-		var videoListMap = getObj(window.localStorage.getItem('videoListService'));
-		var category = $.trim($li.attr("data-vmapp-val"));
-		var videoIdListVal = videoListMap[category].videoIdList;
-
-		// set active category = which ever is clicked
-		videoplayer.activeCategory = category;
-		var videoListSubSet;
-		if (videoIdListVal.length > videoplayer.maxItems) {
-			// load only first videoplayer.maxItems
-			videoListSubSet = _.first(videoIdListVal, videoplayer.maxItems);
-			// set the rest of the videoList for that category
-			videoplayer.category = _.rest(videoIdListVal, videoplayer.maxItems);
-			// set global object into localstorage
-			window.localStorage.setItem('videoPlayer', setObj(videoplayer));	
-			console.log(" loading only "+videoListSubSet.length+" elements");
-			var videoIdBasedMap = getObj(window.localStorage.getItem("videoIdBasedMap"));
-			$videoContainer = populateVideoContents(videoListSubSet, videoIdBasedMap, null, favouritePlayList, myPlayList);
-			$videoContainer.append("<li class='load-more-data' data-theme='b'><a href='#'>Load More Videos</a></li>");
-		} else {
-			console.log(" Not dividing the list ");
-			var videoIdBasedMap = getObj(window.localStorage.getItem("videoIdBasedMap"));
-			$videoContainer = populateVideoContents(videoIdListVal, videoIdBasedMap, null, favouritePlayList, myPlayList);
-		}
-
-		$videoContainer.prepend("<li data-role='list-divider' data-theme='a'>Showing Video(s) from "+category+"</li>");
-
-		$videoContainer.prepend("<li class='showVideoList hide' data-theme='b'><a href='#'>Show Video List</a></li>");
-
-		$videoContainer.listview("refresh");
-
-		// refresh the control group div
-		$("#demo-page").trigger("create");
-
-		$('div.lhsMenu').trigger('click');
-
-		$('div#headerDiv').find('h1').html("PlayList");
-		$('div#headerDiv').find('h1').attr("data-playlist-name", "");*/
 		if ($("div#contentVideosId").find("div.video-wrapper").hasClass("hide")) {
 			$("div#contentVideosId").find("div.video-wrapper").toggleClass("show hide"); //css("display","none");	
 		}
 		if ($("div#contentVideosId").find("div.video-search-wrapper").hasClass("show")) {
 			$("div#contentVideosId").find("div.video-search-wrapper").toggleClass("show hide"); //.css("display","block");
 		}
-		
+
 		showPlaylist($(this),true);
 	});
 		
@@ -506,6 +473,35 @@ $(document).on('pageinit', '[data-url="demo-page"]', function() {
 		return;
 	});
 	
+	$('ul#video-list').on('click', 'a.deleteSearchRButton', function(evt) {
+		var $this = $(this);
+		// evt.stopPropagation();
+		var $liElement = $this.closest('li');
+		var videoListMap = getObj(window.localStorage.getItem('videoListService'));
+		var videoId = $.trim($liElement.attr("data-video-id"));
+		var videoIdListVal = videoListMap["Searched_Videos"].videoIdList;
+		
+		// remove from this
+		videoIdListVal = _.without(videoIdListVal, videoId);
+		if (videoIdListVal == undefined || videoIdListVal.length == 0) {
+			videoListMap = _.omit(videoListMap, "Searched_Videos");
+		} else {
+			videoListMap["Searched_Videos"]["occurance"] = videoIdListVal.length;
+			videoListMap["Searched_Videos"]["videoIdList"] = videoIdListVal;	
+		}
+		window.localStorage.setItem('videoListService', setObj(videoListMap));
+		
+		// Remove from this map as well
+		var videoIdBasedMap = getObj(window.localStorage.getItem("videoIdBasedMap"));
+		videoIdBasedMap = _.omit(videoIdBasedMap, videoId); 
+		window.localStorage.setItem('videoIdBasedMap', setObj(videoIdBasedMap));
+		$liElement.remove();
+		// render the menu again
+		populatePlayListMenu("deleteSearchVideo");
+		return;
+	});
+	
+	
 	
 	$('ul#video-list').on('click', 'img.thumbnail,span.title', function(evt) {
 		console.log("click on image");
@@ -626,15 +622,16 @@ function populateVideoContents(videoIdList, videoIdInfoMap, playListName, favour
 		var $buttonDiv = $("<div data-role='controlgroup' data-type='horizontal'>");
 		var $buttonAnchor = $("<a href='' data-role='button' data-icon='plus' data-iconpos='notext' data-inline='true' class='addButton' title='Add to my playlist'>");
 		var $buttonAnchor1 = $("<a href='' data-role='button' data-icon='star' data-iconpos='notext' data-inline='true' class='starButton' title='Add to Favourite'>");
+		var $buttonAnchor2 = $("<a href='' data-role='button' data-icon='delete' data-iconpos='notext' data-inline='true' class='deleteSearchRButton'>");
 		var $buttonDelete = $("<a href='' data-role='button' data-icon='delete' data-iconpos='notext' data-inline='true' class='deleteButton'>");
 		var likeIcon = '<i class="fa fa-thumbs-o-up fa-lg">'+getFormatedDigits(trim(videoMap.likes))+'</i>';
 		var disLikesIcon = '<i class="fa fa-thumbs-o-down fa-lg">'+getFormatedDigits(trim(videoMap.dislikes))+'</i>';
 		var $titleSpan = $('<span class="title">');
 		var $statSpan = $('<span class="stat">');
 		var $ratingDiv = $('<div>');
-		var $likeDislikeSpan = $('<span class="stat">');
+		var $likeDislikeSpan = $('<span class="stat">');   
 		// If its normal playlist then do this
-		if (!playListName) {
+		if (playListName != "myPlayList" && playListName != "favouritePlayList") {
 			// if the element is in favourite playlist then select it
 			if (_.indexOf(favouritePlayList, videoId) != -1) {
 				$buttonAnchor1.addClass('starSelected');
@@ -672,6 +669,11 @@ function populateVideoContents(videoIdList, videoIdInfoMap, playListName, favour
 			$buttonDiv.append($buttonDelete);
 		}
 		
+		if (playListName === "Searched_Videos") {
+			$buttonDiv.append($buttonAnchor2);
+		}
+		
+		
 		$titleSpan.text(trim(videoMap.title));
 		$statSpan.text(getFormatedDigits(trim(videoMap.total_views))+" Views");
 		$likeDislikeSpan.html(likeIcon+disLikesIcon);
@@ -688,7 +690,7 @@ function populateVideoContents(videoIdList, videoIdInfoMap, playListName, favour
 
 
 
-function populatePlayListMenu() {
+function populatePlayListMenu(actionDelegator) {
 	
 	var videoListMap;
 	// Call another function to do the business logic on the result
@@ -713,6 +715,9 @@ function populatePlayListMenu() {
 		var anchore = $("<a href='#'>");
 		var anchoreDiv = $("<div>");
 		var liEle = $("<li>");
+		if (value.videoIdList == undefined) {
+			console.error("value undefined :: ", key, value);
+		}
 		var videoId = value.videoIdList[(value.videoIdList.length) - 1];
 		
 		liEle.attr("data-vmapp-val", key);
@@ -730,9 +735,12 @@ function populatePlayListMenu() {
 		// $playListUl.append('<li class="liElement" data-vmapp-val="'+key+'"><a href="#">' + key + '(' + value.occurance + ')</a></li>'); 
 	});
 	
-	// Load first li elements on main content
-	// $playListUl.find("li").first().trigger("click");
-	showPlaylist($playListUl.find("li").first(),false);
+	// Added to handle the search videos deletion
+	if (!actionDelegator) {  
+		// Load first li elements on main content
+		// $playListUl.find("li").first().trigger("click");
+		showPlaylist($playListUl.find("li").first(),false);
+	}
 
 	// Always call this to set the design to added elements
 	$playListUl.listview("refresh");
@@ -769,12 +777,12 @@ function showPlaylist($li,clickflg) {
 		window.localStorage.setItem('videoPlayer', setObj(videoplayer));	
 		console.log(" loading only "+videoListSubSet.length+" elements");
 		var videoIdBasedMap = getObj(window.localStorage.getItem("videoIdBasedMap"));
-		$videoContainer = populateVideoContents(videoListSubSet, videoIdBasedMap, null, favouritePlayList, myPlayList);
+		$videoContainer = populateVideoContents(videoListSubSet, videoIdBasedMap, category, favouritePlayList, myPlayList);
 		$videoContainer.append("<li class='load-more-data' data-theme='b'><a href='#'>Load More Videos</a></li>");
 	} else {
 		console.log(" Not dividing the list ");
 		var videoIdBasedMap = getObj(window.localStorage.getItem("videoIdBasedMap"));
-		$videoContainer = populateVideoContents(videoIdListVal, videoIdBasedMap, null, favouritePlayList, myPlayList);
+		$videoContainer = populateVideoContents(videoIdListVal, videoIdBasedMap, category, favouritePlayList, myPlayList);
 	}
 
 	$videoContainer.prepend("<li data-role='list-divider' data-theme='a'>Showing Video(s) from "+category+"</li>");
@@ -923,7 +931,7 @@ function getFormatedDigits(val) {
 
 function getVideosFromYoutube(queryString) {
 	
-	var URL = "https://gdata.youtube.com/feeds/api/videos?max-results=20&orderby=viewCount&v=2&alt=jsonc&start-index=1";
+	var URL = "https://gdata.youtube.com/feeds/api/videos?max-results=20&orderby=viewCount&safeSearch=strict&restriction=US&v=2&alt=jsonc&start-index=1";
 	URL+= "&q=";
 	URL+= queryString;
 	$.getJSON(URL, 
